@@ -367,11 +367,12 @@
 <h2 id="introduction">Introduction</h2>
 <p>This is a sample project for a file Explorer with mappView. It allows you to delete and copy files or directories between two locations. Navigate through the folder structure by double tapping on a folder name. Access USB sticks and network shares and use them like local folders.</p>
 <p><img alt="" src="images/screenshot_main.png" /></p>
-<p>See <a href="Logical/mappFileExplorer/HowToImport.pdf"><strong>How to import the file explorer into an existing project.</strong></a> Download the latest release from <a href="../../releases"><strong>here.</strong></a> When upgrading from a previous version make sure to delete the files that were imported before. Detailed information are available in the <a href="https://github.com/br-automation-community/mappView-File-Explorer/wiki"><strong>Wiki</strong></a>. This sample can run in simualtion mode (http://127.0.0.1:81/).</p>
+<p>See <a href="import.html">How to import the file explorer into an existing project.</a> When upgrading from a previous version make sure to delete the files that were imported before. This sample can run in simulation mode (http://127.0.0.1:81/).</p>
 <h2 id="changes-between-version-1x-and-2x">Changes between version 1.x and 2.x</h2>
+<p>Keep in mind that with AS6 it is no longer possible to access partitions with a driver letter. The only supported way is to use the USER_PATH variable that points to the user partition on the memory card. When you do not use the upload or download functionality you can upgrade the previous version to Autmaiotn Studio 6 without any major changes. Use the <a href="https://github.com/br-automation-community/as6-migration-tools">community script</a> to identify potential issues.</p>
 <ul>
-<li>Update to Automation Studio AS6. Keep in mind that with AS6 it is no longer possible to access partitions with a driver letter. The only supported way is to use the USER_PATH variable that points to the user partition on the memory card.</li>
-<li>Replaced upload and download implementation to transfer widget.</li>
+<li>Update to Automation Studio AS6. </li>
+<li>Replaced upload and download implementation to new transfer widget.</li>
 <li>The upload widget no longer asks to overwrite existing files, the file is always overwritten.</li>
 </ul>
 <h2 id="requirements">Requirements</h2>
