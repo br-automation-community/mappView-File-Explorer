@@ -1,6 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<?AutomationStudio Version=4.5.5.113 SP?>
-<Library SubType="binary" Description="This library contains FBKs for pinging a station." xmlns="http://br-automation.co.at/AS/Library">
+<?xml version="1.0" encoding="utf-8"?>
+<?AutomationStudio Version=3.0.0.0?>
+<Library xmlns="http://br-automation.co.at/AS/Library" Description="This library contains FBKs for pinging a station.">
   <Files>
     <File>AsICMP.fun</File>
     <File>AsICMP.typ</File>

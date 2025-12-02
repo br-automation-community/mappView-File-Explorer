@@ -1,7 +1,5 @@
 // ----------------------------------------------------------------------------------------
 //	Function:	mappView explorer
-//  Version:	1.08
-//	Changed:	03.05.2021
 // ----------------------------------------------------------------------------------------
 
 PROGRAM _INIT
@@ -12,36 +10,6 @@ PROGRAM _INIT
 	brsstrcpy(ADR(EXPL.PAR[0].device_active), ADR(EXPL.PAR[0].device_list[0]));
 	brsstrcpy(ADR(EXPL.PAR[1].device_active), ADR(EXPL.PAR[1].device_list[0]));
 	
-	// ----------------------------------------------------------------------------------------
-	// Allocate memory for file upload and download
-	AsMemPartCreate_0.enable	:= TRUE;
-	AsMemPartCreate_0.len		:= EXPL_UPLOAD_DOWNLOAD_SIZE;
-	AsMemPartCreate_0();
-	IF AsMemPartCreate_0.status <> 0 THEN
-		step := CreateError(ERR_MEM_ALLOC, side, step, 'file upload and download alloc failed', ADR(EXPL));
-	ELSE
-		AsMemPartAllocClear_0.enable	:= TRUE;
-		AsMemPartAllocClear_0.ident		:= AsMemPartCreate_0.ident;
-		AsMemPartAllocClear_0.len		:= EXPL_UPLOAD_DOWNLOAD_SIZE;
-		AsMemPartAllocClear_0();
-		IF AsMemPartCreate_0.status <> 0 THEN
-			step := CreateError(ERR_MEM_ALLOC, side, step, 'file upload and download clear failed', ADR(EXPL));
-		END_IF
-	END_IF
-	
-	// ----------------------------------------------------------------------------------------
-	// Generate HTML messages for web upload
-	upload_response[0]	:= '<html><body><form action="/uploadA.html" name="form_upload" method="post" enctype="multipart/form-data" >
-	<label for="file-upload" style="font-weight:bold;font-family: sans-serif;font-size:16px;padding:10px 10px;10px;10px;" class="custom-file-upload">Upload</label>
-	<input type="file" id="file-upload" style="display:none;" onchange="form.submit()" name="file_selected" content-type="application/octet-stream" />
-	</form><body></html> ';
-	WebServiceUpload[0].pServiceName := ADR('uploadA.html');
-	upload_response[1]	:= '<html><body><form action="/uploadB.html" name="form_upload" method="post" enctype="multipart/form-data" >
-	<label for="file-upload" style="font-weight:bold;font-family: sans-serif;font-size:16px;padding:10px 10px;10px;10px;" class="custom-file-upload">Upload</label>
-	<input type="file" id="file-upload" style="display:none;" onchange="form.submit()" name="file_selected" content-type="application/octet-stream" />
-	</form><body></html> ';
-	WebServiceUpload[1].pServiceName := ADR('uploadB.html');
-
 	// ----------------------------------------------------------------------------------------
 	// Connect to user device for temporary files used with download all
 	REPEAT
@@ -54,35 +22,6 @@ PROGRAM _INIT
 END_PROGRAM
 
 PROGRAM _CYCLIC
-	// ----------------------------------------------------------------------------------------
-	// Web service driver for file upload
-	WebServiceUpload[side].enable 			:= TRUE;
-	WebServiceUpload[side].option 			:= httpOPTION_HTTP_11 + httpOPTION_SERVICE_TYPE_NAME;	
-	WebServiceUpload[side].pRequestData  	:= AsMemPartAllocClear_0.mem;
-	WebServiceUpload[side].requestDataSize 	:= EXPL_UPLOAD_DOWNLOAD_SIZE;
-	WebServiceUpload[side].pResponseData 	:= ADR(upload_response[side]);
-	WebServiceUpload[side].responseDataLen 	:= brsstrlen(ADR(upload_response[side]));
-	WebServiceUpload[side]();
-
-	// Reset send command 
-	IF(WebServiceUpload[side].send = TRUE)  THEN		
-		WebServiceUpload[side].send := FALSE;
-	// Send response when page is loaded or data is posted
-	ELSIF(WebServiceUpload[side].status = ERR_OK AND WebServiceUpload[side].send = FALSE) THEN 
-		WebServiceUpload[side].send := TRUE;
-	// New upload data arrived
-	ELSIF(WebServiceUpload[side].send = FALSE AND WebServiceUpload[side].requestDataLen > 0 AND EXPL.CMD[side].upload = FALSE) THEN
-		// Add delay so that upload can finish
-		upload_delay.PT := WebServiceUpload[side].requestDataLen/100000*5;
-		upload_delay.IN := TRUE;
-		upload_delay();
-	END_IF
-	// Check new uploaded data
-	IF(upload_delay.Q AND EXPL.CMD[side].upload = FALSE) THEN
-		upload_delay.IN := FALSE;
-		upload_delay();
-		EXPL.CMD[side].upload := TRUE;
-	END_IF
 	
 	// ------------------------------------------------------------------------------------------------
 	// Set switches for HMI, these buttons are enabled if there is at least one file or directory
@@ -168,7 +107,7 @@ PROGRAM _CYCLIC
 		EXPL.VIS[0].enable_button_set_2 := TRUE;
 		EXPL.VIS[1].enable_button_set_2 := TRUE;
 		// Reset busy status
-		IF(EXPL.ERR.state = 0) THEN
+		IF (EXPL.ERR.state = 0) AND (EXPL.status_no = ERR_FUB_BUSY) THEN
 			EXPL.status_no := 0;
 		END_IF
 		RETURN;
@@ -203,10 +142,10 @@ PROGRAM _CYCLIC
 				// Check if directory name is empty
 				IF (EXPL.DAT[side].item_list[EXPL.VIS[side].item_selected] = '') THEN
 					step := CreateError(ERR_EMPTY_ITEM, side, step, 'directory name is empty', ADR(EXPL));
-				// Check if directory name is valid
+					// Check if directory name is valid
 				ELSIF((brsmemcmp(ADR(EXPL.DAT[side].item_list[EXPL.VIS[side].item_selected]), ADR('(DIR)'), 5) <> 0) AND (EXPL.DAT[side].item_list[EXPL.VIS[side].item_selected] <> '..'))  THEN
 					step := CreateError(ERR_INVALID_ITEM_NAME, side, step, 'this is not a valid directory name', ADR(EXPL));
-				// Check if new directory name fits into string
+					// Check if new directory name fits into string
 				ELSIF(brsstrlen(ADR(EXPL.DAT[side].item_list[EXPL.VIS[side].item_selected])) - 5 + brsstrlen(ADR(EXPL.PAR[side].dir_path)) + 1 >= EXPL_DIR_PATH_LENGTH) THEN
 					step := CreateError(ERR_PATH_EXCEEDS_MAX, side, step, 'directory path exceeds maximum length', ADR(EXPL));
 				ELSE
@@ -220,10 +159,10 @@ PROGRAM _CYCLIC
 				// Check if new directory name is empty
 				IF (EXPL.PAR[side].new_name = '') THEN
 					step := CreateError(ERR_EMPTY_ITEM, side, step, 'directory name is empty', ADR(EXPL));
-				// Check if new directory name fits into path string
+					// Check if new directory name fits into path string
 				ELSIF(brsstrlen(ADR(EXPL.PAR[side].new_name)) + brsstrlen(ADR(EXPL.PAR[side].dir_path)) + 1 >= EXPL_DIR_PATH_LENGTH) THEN
 					step := CreateError(ERR_PATH_EXCEEDS_MAX, side, step, 'directory path name exceeds maximum length', ADR(EXPL));
-				// Check if new directory name fits into directory name string
+					// Check if new directory name fits into directory name string
 				ELSIF(brsstrlen(ADR(EXPL.PAR[side].new_name)) + 5 >= EXPL_ITEM_LENGTH) THEN
 					step := CreateError(ERR_DIR_EXCEEDS_MAX, side, step, 'directory name exceeds maximum length', ADR(EXPL));
 				ELSE
@@ -255,7 +194,7 @@ PROGRAM _CYCLIC
 			// ----------------------------------------------------------------------------------------
 			// Download selected file or directory
 			IF (EXPL.CMD[side].download = TRUE) THEN
-				EXPL.VIS[side].download_file_url := '';
+				EXPL.VIS[side].file_full_path := '';
 				item_name := EXPL.DAT[side].item_list[EXPL.VIS[side].item_selected];
 				// Make sure selected entry is valid
 				IF(brsmemcmp(ADR(item_name), ADR('..'), 2) <> 0) THEN
@@ -264,7 +203,7 @@ PROGRAM _CYCLIC
 						device_active := EXPL.PAR[side].device_active;
 						dir_path := EXPL.PAR[side].dir_path;
 						step := EXP_FILE_DOWNLOAD;
-					// Selected item is a directory
+						// Selected item is a directory
 					ELSE
 						ReplaceString(ADR(item_name), ADR('(DIR)'), ADR(''), TRUE);
 						step := EXP_FILE_DOWNLOAD_DIR;
@@ -276,6 +215,9 @@ PROGRAM _CYCLIC
 			// ----------------------------------------------------------------------------------------
 			// Upload a new file
 			IF (EXPL.CMD[side].upload = TRUE) THEN
+				EXPL.VIS[side].file_full_path := '';
+				device_active := EXPL.PAR[side].device_active;
+				dir_path := EXPL.PAR[side].dir_path;
 				step := EXP_FILE_UPLOAD;
 			END_IF
 			// ----------------------------------------------------------------------------------------
@@ -294,7 +236,7 @@ PROGRAM _CYCLIC
 				ELSIF(brsmemcmp(ADR(EXPL.DAT[side].item_list[EXPL.VIS[side].item_selected]), ADR('(DIR)'), 5) = 0)	THEN
 					item_name := EXPL.DAT[side].item_list[EXPL.VIS[side].item_selected];
 					step := EXP_DIR_DELETE;
-				// Delete a file
+					// Delete a file
 				ELSE
 					item_name := EXPL.DAT[side].item_list[EXPL.VIS[side].item_selected];
 					step := EXP_FILE_DELETE;
@@ -307,13 +249,13 @@ PROGRAM _CYCLIC
 				// Check if new directory name is empty
 				IF (EXPL.PAR[side].new_name = '') THEN
 					step := CreateError(ERR_EMPTY_ITEM, side, step, 'new name is empty', ADR(EXPL));
-				// Make sure that a valid item was selected
+					// Make sure that a valid item was selected
 				ELSIF (EXPL.DAT[side].item_list[EXPL.VIS[side].item_selected] = '..') THEN
 					step := CreateError(ERR_INVALID_ITEM_NAME, side, step, 'this is not a valid item name', ADR(EXPL));
-				// Rename a directory
+					// Rename a directory
 				ELSIF(brsmemcmp(ADR(EXPL.DAT[side].item_list[EXPL.VIS[side].item_selected]), ADR('(DIR)'), 5) = 0)	THEN
 					step := EXP_DIR_RENAME;
-				// Rename a file
+					// Rename a file
 				ELSE
 					step := EXP_FILE_RENAME;
 				END_IF
@@ -322,9 +264,9 @@ PROGRAM _CYCLIC
 			// Set status
 			EXPL.status_no := ERR_FUB_BUSY;
 
-		//**********************************************************************************************
-		// Read directory information
-		//**********************************************************************************************
+			//**********************************************************************************************
+			// Read directory information
+			//**********************************************************************************************
 		EXP_READ_DIR:
 			// Show current state
 			animation := animation := WorkingStatus(ADR(EXPL), ADR('reading directory...'), animation);
@@ -350,23 +292,23 @@ PROGRAM _CYCLIC
 			// OK
 			IF (DInfo.status = OK) THEN
 				step := EXP_READ_DIR_1;
-			// ----------------------------------------------------------------------------------------
-			// Device is not available
+				// ----------------------------------------------------------------------------------------
+				// Device is not available
 			ELSIF (DInfo.status = fiERR_FILE_DEVICE) THEN
-			 	EXPL.DAT[side].item_list[0] := 'not connected';
+				EXPL.DAT[side].item_list[0] := 'not connected';
 				step := CreateError(DInfo.status, side, step, 'not connected', ADR(EXPL));
-			// ----------------------------------------------------------------------------------------
-			// Device is not available
+				// ----------------------------------------------------------------------------------------
+				// Device is not available
 			ELSIF (DInfo.status = fiERR_DEVICE_MANAGER) THEN
 				EXPL.DAT[side].item_list[0] := 'not connected';
 				step := CreateError(DInfo.status, side, step, 'check device name and path', ADR(EXPL));
-			// Error
+				// Error
 			ELSIF (DInfo.status <> ERR_FUB_BUSY) THEN
 				step := CreateError(DInfo.status, side, step, 'error dir info', ADR(EXPL));
 			END_IF
-		//**********************************************************************************************
-		// Open directory
-		//**********************************************************************************************
+			//**********************************************************************************************
+			// Open directory
+			//**********************************************************************************************
 		EXP_READ_DIR_1:
 			// Add current directory
 			IF(EXPL.PAR[side].dir_path = '') THEN
@@ -382,14 +324,14 @@ PROGRAM _CYCLIC
 			IF (DOpen.status = OK) THEN
 				has_oversized_items := FALSE;
 				step := EXP_READ_DIR_2;
-			// Error
+				// Error
 			ELSIF (DOpen.status <> ERR_FUB_BUSY) THEN
 				step := CreateError(DOpen.status, side, step, 'error dir open', ADR(EXPL));
 			END_IF;
-		//**********************************************************************************************
-		// Read file directory information
-		//**********************************************************************************************
-	 	EXP_READ_DIR_2:
+			//**********************************************************************************************
+			// Read file directory information
+			//**********************************************************************************************
+		EXP_READ_DIR_2:
 			DRead.enable 	:= TRUE;
 			DRead.ident		:= DOpen.ident;
 			DRead.pData 	:= ADR(lDirReadData);
@@ -427,8 +369,8 @@ PROGRAM _CYCLIC
 							ELSE
 								has_oversized_items := TRUE;
 							END_IF
-						// ----------------------------------------------------------------------------
-						// Read directory information
+							// ----------------------------------------------------------------------------
+							// Read directory information
 						ELSIF (brsstrcmp(ADR(lDirReadData.Filename), ADR('.')) <> 0 AND brsstrcmp(ADR(lDirReadData.Filename), ADR('..')) <> 0 AND brsstrcmp(ADR(lDirReadData.Filename), ADR('System Volume Information')) <> 0) THEN
 							IF (brsstrlen(ADR(lDirReadData.Filename)) < EXPL_ITEM_LENGTH-5) THEN
 								// Copy directory name
@@ -444,16 +386,16 @@ PROGRAM _CYCLIC
 				ELSE
 					step := CreateError(ERR_MAX_FILES_REACHED, side, step, 'maximum number of files reached', ADR(EXPL));
 				END_IF
-			// Last entry reached
+				// Last entry reached
 			ELSIF (DRead.status = fiERR_NO_MORE_ENTRIES) THEN
 				step := EXP_READ_DIR_3;
-			// Error
+				// Error
 			ELSIF (DRead.status <> ERR_FUB_BUSY) THEN
 				step := CreateError(DRead.status, side, step, 'error dir read', ADR(EXPL));
 			END_IF
-		//**********************************************************************************************
-		// Close directory information
-		//**********************************************************************************************
+			//**********************************************************************************************
+			// Close directory information
+			//**********************************************************************************************
 		EXP_READ_DIR_3:
 			DClose.enable 	:= TRUE;
 			DClose.ident	:= DOpen.ident;
@@ -469,13 +411,13 @@ PROGRAM _CYCLIC
 					DClose.ident := 0;
 					step := EXP_READ_DIR_4;
 				END_IF
-			// Error
+				// Error
 			ELSIF (DClose.status <> ERR_FUB_BUSY) THEN
 				step := CreateError(DClose.status, side, step, 'error dir close', ADR(EXPL));
 			END_IF
-		//**********************************************************************************************
-		// Get device memory information
-		//**********************************************************************************************
+			//**********************************************************************************************
+			// Get device memory information
+			//**********************************************************************************************
 		EXP_READ_DIR_4:
 			DMemInfo.enable 	:= TRUE;
 			DMemInfo.pDevice	:= ADR(EXPL.PAR[side].device_active);
@@ -508,9 +450,9 @@ PROGRAM _CYCLIC
 			ELSIF (DMemInfo.status <> ERR_FUB_BUSY) THEN
 				step := CreateError(DMemInfo.status, side, step, 'error reading device memory information', ADR(EXPL));
 			END_IF
-		//**********************************************************************************************
-		// Change directory
-		//**********************************************************************************************
+			//**********************************************************************************************
+			// Change directory
+			//**********************************************************************************************
 		EXP_DIR_CHANGE:
 			// ----------------------------------------------------------------------------------------
 			// Move one directory up
@@ -525,8 +467,8 @@ PROGRAM _CYCLIC
 					lx := lx -1;
 				END_WHILE
 				brsmemset(ADR(EXPL.PAR[side].dir_path) + lx, 0, 1);
-			// ----------------------------------------------------------------------------------------
-			// Move one directory down
+				// ----------------------------------------------------------------------------------------
+				// Move one directory down
 			ELSE
 				// Add slash if not in root
 				IF(EXPL.PAR[side].dir_path <> '/') THEN
@@ -540,9 +482,9 @@ PROGRAM _CYCLIC
 			EXPL.CMD[side].dir_change 		:= 0;
 			EXPL.CMD[side].refresh 			:= TRUE;
 			step							:= EXP_WAIT;
-		//**********************************************************************************************
-		// Copy all items
-		//**********************************************************************************************
+			//**********************************************************************************************
+			// Copy all items
+			//**********************************************************************************************
 		EXP_COPY_ALL:
 			// Show current state
 			animation := animation := WorkingStatus(ADR(EXPL), ADR('copying files and folders...'), animation);
@@ -559,9 +501,9 @@ PROGRAM _CYCLIC
 			ELSE
 				step := EXP_FILE_COPY;
 			END_IF
-		//**********************************************************************************************
-		// Copy files
-		//**********************************************************************************************
+			//**********************************************************************************************
+			// Copy files
+			//**********************************************************************************************
 		EXP_FILE_COPY:
 			// Show current state
 			animation := WorkingStatus(ADR(EXPL), ADR('copying file...'), animation);
@@ -599,23 +541,23 @@ PROGRAM _CYCLIC
 							END_IF
 							EXPL.CMD[side].copy	:= FALSE;
 							step := EXP_WAIT;
-						// ----------------------------------------------------------------------------
-						// Proceed with next file
+							// ----------------------------------------------------------------------------
+							// Proceed with next file
 						ELSIF (FCopy.status = OK) THEN
 							EXPL.VIS[side].item_selected := EXPL.VIS[side].item_selected + 1;
 						ELSIF (FCopy.status <> ERR_FUB_BUSY) THEN
 							step := CreateError(FCopy.status, side, step, 'error copying file', ADR(EXPL));
 						END_IF
-					// File name is too long
+						// File name is too long
 					ELSE
 						step := CreateError(ERR_NAME_EXCEEDS_MAX, side, step, 'file name exceeds maximum length', ADR(EXPL));
 					END_IF
-				// File name  is empty
+					// File name  is empty
 				ELSE
 					step := CreateError(ERR_EMPTY_ITEM, side, step, 'file name is empty', ADR(EXPL));
 				END_IF
-			// ----------------------------------------------------------------------------------------
-			// Finish copy all
+				// ----------------------------------------------------------------------------------------
+				// Finish copy all
 			ELSE
 				// Reset command and refresh directory
 				IF(COPY_AUTO_REFRESH = TRUE) THEN
@@ -625,9 +567,9 @@ PROGRAM _CYCLIC
 				EXPL.VIS[side].item_selected 	:= 0;
 				step							:= EXP_WAIT;
 			END_IF
-		//**********************************************************************************************
-		// Copy directory
-		//**********************************************************************************************
+			//**********************************************************************************************
+			// Copy directory
+			//**********************************************************************************************
 		EXP_DIR_COPY:
 			// Show current state
 			animation := WorkingStatus(ADR(EXPL), ADR('copying directory...'), animation);
@@ -668,29 +610,29 @@ PROGRAM _CYCLIC
 								END_IF
 								EXPL.CMD[side].copy	:= FALSE;
 								step := EXP_WAIT;
-							// ----------------------------------------------------------------------------
-							// Proceed with next directory
+								// ----------------------------------------------------------------------------
+								// Proceed with next directory
 							ELSIF (DCopy.status = OK) THEN
 								EXPL.VIS[side].item_selected := EXPL.VIS[side].item_selected + 1;
 								// Switch to file copy when no more directory can be found
 								IF(brsmemcmp(ADR(EXPL.DAT[side].item_list[EXPL.VIS[side].item_selected]), ADR('(DIR)'), 5) <> 0) THEN
 									step := EXP_FILE_COPY;
 								END_IF
-							// Error
+								// Error
 							ELSIF (DCopy.status <> ERR_FUB_BUSY) THEN
 								step := CreateError(DCopy.status, side, step, 'error copying directory', ADR(EXPL));
 							END_IF
 						END_IF
-					// Directory name is too long
+						// Directory name is too long
 					ELSE
 						step := CreateError(ERR_PATH_EXCEEDS_MAX, side, step, 'directory path name exceeds maximum length', ADR(EXPL));
 					END_IF
-				// Directory name is empty
+					// Directory name is empty
 				ELSE
 					step := CreateError(ERR_EMPTY_ITEM, side, step, 'directory name is empty', ADR(EXPL));
 				END_IF
-			// ----------------------------------------------------------------------------------------
-			// Finish copy all
+				// ----------------------------------------------------------------------------------------
+				// Finish copy all
 			ELSE
 				// Reset command and refresh directory
 				IF (COPY_AUTO_REFRESH = TRUE) THEN
@@ -700,9 +642,9 @@ PROGRAM _CYCLIC
 				EXPL.VIS[side].item_selected := 0;
 				step := EXP_WAIT;
 			END_IF
-		//**********************************************************************************************
-		// Delete selected file
-		//**********************************************************************************************
+			//**********************************************************************************************
+			// Delete selected file
+			//**********************************************************************************************
 		EXP_FILE_DELETE:
 			// Show current state
 			animation := WorkingStatus(ADR(EXPL), ADR('deleting file...'), animation);
@@ -723,17 +665,17 @@ PROGRAM _CYCLIC
 					EXPL.CMD[side].delete 	:= FALSE;
 					EXPL.CMD[side].refresh  := TRUE;
 					step := EXP_WAIT;
-				// Proceed with command upload
+					// Proceed with command upload
 				ELSE
 					step := EXP_FILE_UPLOAD_1;
 				END_IF
-			// Error
+				// Error
 			ELSIF (FDelete.status <> ERR_FUB_BUSY) THEN
 				step := CreateError(FDelete.status, side, step, 'error deleting file', ADR(EXPL));
 			END_IF
-		//**********************************************************************************************
-		// Rename selected file
-		//**********************************************************************************************
+			//**********************************************************************************************
+			// Rename selected file
+			//**********************************************************************************************
 		EXP_FILE_RENAME:
 			// Show current state
 			animation := WorkingStatus(ADR(EXPL), ADR('renaming file...'), animation);
@@ -759,9 +701,9 @@ PROGRAM _CYCLIC
 			ELSIF (FRename.status <> ERR_FUB_BUSY) THEN
 				step := CreateError(FRename.status, side, step, 'error renaming file', ADR(EXPL));
 			END_IF
-		//**********************************************************************************************
-		// View selected file
-		//**********************************************************************************************
+			//**********************************************************************************************
+			// View selected file
+			//**********************************************************************************************
 		EXP_FILE_VIEW:		
 			CreateCompletePath(EXPL.PAR[side].dir_path, EXPL.DAT[side].item_list[EXPL.VIS[side].item_selected], ADR(tmp_str1));
 			
@@ -781,195 +723,45 @@ PROGRAM _CYCLIC
 				END_IF
 			END_FOR;
 			step := CreateError(FRename.status, side, step, 'error this file extension is not supported for viewing', ADR(EXPL));
-		//**********************************************************************************************
-		// Download file
-		//**********************************************************************************************
-		EXP_FILE_DOWNLOAD:						
-			// ----------------------------------------------------------------------------------------
-			// Initialize file open structure
-			CreateCompletePath(dir_path, item_name, ADR(tmp_str1));
-			FOpen.enable	:= TRUE;
-			FOpen.pDevice 	:= ADR(device_active);
-			FOpen.pFile		:= ADR(tmp_str1);
-			FOpen();
-			
-			// ----------------------------------------------------------------------------------------
-			// OK
-			IF (FOpen.status = OK) THEN
-				// Make sure file fits into memory
-				IF(FOpen.filelen <= EXPL_UPLOAD_DOWNLOAD_SIZE) THEN
-					// Clear memory and reset web service
-					brsmemset(AsMemPartAllocClear_0.mem, 0, EXPL_UPLOAD_DOWNLOAD_SIZE);
-					WebserviceDownload.enable := FALSE;
-					WebserviceDownload();
-					step := EXP_FILE_DOWNLOAD_1;
-				// File is too large
-				ELSE
-					tmp_str1 := 'download file exceeds maximum buffer size of ';
-					brsitoa(EXPL_UPLOAD_DOWNLOAD_SIZE, ADR(tmp_str2));
-					brsstrcat(ADR(tmp_str1), ADR(tmp_str2));
-					brsstrcat(ADR(tmp_str1), ADR(' bytes'));	
-					// Delete old zip file before generating an error
-					IF(IsInstr(ADR(item_name), ADR('.tar.gz'))) THEN
-						step := EXP_FILE_DOWNLOAD_5;
-					ELSE
-						step := CreateError(ERR_MEM_DOWNLOAD, side, step, tmp_str1, ADR(EXPL));
-					END_IF
-				END_IF;
-				// Error
-			ELSIF (FOpen.status <> ERR_FUB_BUSY) THEN
-				step := CreateError(FOpen.status, side, step, 'error opening file for download', ADR(EXPL));
-			END_IF
-		//**********************************************************************************************
-		// Download file
-		//**********************************************************************************************
-		EXP_FILE_DOWNLOAD_1:			
-			// ----------------------------------------------------------------------------------------
-			// Initialize file read structure
-			FRead.enable	:= TRUE;
-			FRead.ident		:= FOpen.ident;
-			FRead.len		:= FOpen.filelen;
-			FRead.pDest		:= AsMemPartAllocClear_0.mem;
-			FRead();
-			
-			// ----------------------------------------------------------------------------------------
-			// OK
-			IF (FRead.status = OK) THEN
-				step := EXP_FILE_DOWNLOAD_2;
-			// Error
-			ELSIF (FRead.status <> ERR_FUB_BUSY) THEN
-				step := CreateError(FRead.status, side, step, 'error reading file for download', ADR(EXPL));
-			END_IF
-		//**********************************************************************************************
-		// Download file
-		//**********************************************************************************************
-		EXP_FILE_DOWNLOAD_2:			
-			// ----------------------------------------------------------------------------------------
-			// Initialize file close structure
-			FClose.enable	:= TRUE;
-			FClose.ident	:= FOpen.ident;
-			FClose();
-			
-			// ----------------------------------------------------------------------------------------
-			// OK
-			IF (FClose.status = OK) THEN
-				download_timeout.IN := FALSE;
-				download_timeout();
-				step := EXP_FILE_DOWNLOAD_3;
-			// Error
-			ELSIF (FClose.status <> ERR_FUB_BUSY) THEN
-				step := CreateError(FClose.status, side, step, 'error closing file for download', ADR(EXPL));
-			END_IF		
-		//**********************************************************************************************
-		// Download file - web service
-		//**********************************************************************************************
-		EXP_FILE_DOWNLOAD_3:
-			// ----------------------------------------------------------------------------------------
-			// Create response header
-			response_header_data :=  'Content-Type: application/octet-stream; Content-Transfer-Encoding: binary; Content-Disposition: attachment; filename="';
-			brsstrcpy(ADR(tmp_str1), ADR(item_name));
-			ReplaceString(ADR(tmp_str1), ADR(' '), ADR('%20'), FALSE);
-			brsstrcat(ADR(response_header_data), ADR(tmp_str1));
-			brsstrcat(ADR(response_header_data), ADR('"'));
-			
-			// ----------------------------------------------------------------------------------------
-			// Pre-configure web service for download
-			response_header.rawHeader.pData 	:= ADR(response_header_data);
-			response_header.rawHeader.dataSize 	:= SIZEOF(response_header_data);		
-			response_header.rawHeader.dataLen 	:= brsstrlen(ADR(response_header_data));
-			
-			// ----------------------------------------------------------------------------------------
-			// Start web service
-			WebserviceDownload.enable 			:= TRUE;
-			WebserviceDownload.option 			:= httpOPTION_HTTP_10 + httpOPTION_SERVICE_TYPE_NAME;
-			WebserviceDownload.pResponseData 	:= AsMemPartAllocClear_0.mem;
-			WebserviceDownload.pResponseHeader	:= ADR(response_header);
-			WebserviceDownload.pServiceName 	:= ADR(tmp_str1);
-			WebserviceDownload.responseDataLen 	:= FOpen.filelen;
-			WebserviceDownload();
-			
-			// ----------------------------------------------------------------------------------------
-			// Timeout if file is not pulled from browser
-			download_timeout.IN := TRUE;
-			download_timeout.PT := 300 + FOpen.filelen/10000;
-			download_timeout();
-			IF(download_timeout.Q) THEN
-				step := CreateError(ERR_TIMEOUT_DOWNLOAD, side, step, 'error download response timed out', ADR(EXPL));
-			END_IF
+			//**********************************************************************************************
+			// Download file
+			//**********************************************************************************************
+		EXP_FILE_DOWNLOAD:
+			animation := WorkingStatus(ADR(EXPL), ADR('downloading file...'), animation);
 
-			// ----------------------------------------------------------------------------------------
-			// Set URL
-			IF (WebserviceDownload.status = ERR_FUB_BUSY AND EXPL.VIS[side].download_file_url = '') THEN
-				brsstrcat(ADR(EXPL.VIS[side].download_file_url), ADR(item_name));
-			// Start sending data
-			ELSIF (WebserviceDownload.status = OK AND WebserviceDownload.send = FALSE AND EXPL.VIS[side].download_file_url <> '') THEN
-				WebserviceDownload.send := TRUE;
-			// Sending data finished
-			ELSIF (WebserviceDownload.send = TRUE) THEN
-				step := EXP_FILE_DOWNLOAD_4;
-				// Error
-			ELSIF (WebserviceDownload.status <> ERR_FUB_BUSY AND WebserviceDownload.status <> OK) THEN
-				step := CreateError(WebserviceDownload.status, side, step, 'error sending web response', ADR(EXPL));
-			END_IF			
-		//**********************************************************************************************
-		// Download file - web service
-		//**********************************************************************************************
-		EXP_FILE_DOWNLOAD_4:			
-			WebserviceDownload();			
-			download_timeout();
-			IF(download_timeout.Q) THEN
-				step := CreateError(ERR_TIMEOUT_DOWNLOAD, side, step, 'error download response timed out', ADR(EXPL));
+			EXPL.VIS[side].file_full_path := device_active;
+			IF dir_path <> '' THEN
+				brsstrcat(ADR(EXPL.VIS[side].file_full_path), ADR(dir_path));
 			END_IF
+			brsstrcat(ADR(EXPL.VIS[side].file_full_path), ADR('/'));
+			brsstrcat(ADR(EXPL.VIS[side].file_full_path), ADR(item_name));
 			
-			// ----------------------------------------------------------------------------------------
-			// Finish sending data
-			IF (WebserviceDownload.phase = httpPHASE_WAITING) THEN
-				EXPL.VIS[side].download_file_url := '';
-				WebserviceDownload.send := FALSE;
-				// Download is a directory
-				IF(IsInstr(ADR(item_name), ADR('.tar.gz'))) THEN
-					step := EXP_FILE_DOWNLOAD_5;
-				// Download is a single file
-				ELSE
-					EXPL.CMD[side].download	:= FALSE;
+			EXPL.VIS[side].file_status := 0;
+			EXPL.VIS[side].download_execute := TRUE;
+			step := EXP_FILE_DOWNLOAD_1;
+			
+			//**********************************************************************************************
+			// Download file
+			//**********************************************************************************************
+		EXP_FILE_DOWNLOAD_1:
+			IF EDGENEG(EXPL.VIS[side].download_execute) THEN
+				EXPL.CMD[side].download := FALSE;
+				
+				// ----------------------------------------------------------------------------------------
+				// OK
+				IF (EXPL.VIS[side].file_status = OK) THEN
 					step := EXP_WAIT;
-				END_IF
-				// Error
-			ELSIF (WebserviceDownload.status <> ERR_FUB_BUSY) THEN
-				step := CreateError(WebserviceDownload.status, side, step, 'error sending web response', ADR(EXPL));
-			END_IF			
-		//**********************************************************************************************
-		// Delete old zip file after download
-		//**********************************************************************************************
-		EXP_FILE_DOWNLOAD_5:
-			// Show current state
-			animation := WorkingStatus(ADR(EXPL), ADR('deleting old zip file...'), animation);
-
-			// ----------------------------------------------------------------------------------------
-			// Initialize file delete structure
-			FDelete.enable		:= TRUE;
-			FDelete.pDevice 	:= ADR('TMP_USER');
-			FDelete.pName		:= ADR(item_name);
-			FDelete();
-
-			// ----------------------------------------------------------------------------------------
-			// OK
-			IF (FDelete.status = OK) THEN
-				// Generate error when file was too large
-				IF(FOpen.filelen > EXPL_UPLOAD_DOWNLOAD_SIZE) THEN
-					step := CreateError(ERR_MEM_DOWNLOAD, side, step, tmp_str1, ADR(EXPL));
-				// Finish directory download
+					// Error access rights 
+				ELSIF (EXPL.VIS[side].file_status = -1064165358) THEN
+					step := CreateError(EXPL.VIS[side].file_status, side, step, 'user  has insufficient rights to access file or device', ADR(EXPL));
+					// Error
 				ELSE
-					EXPL.CMD[side].download	:= FALSE;
-					step := EXP_WAIT;
+					step := CreateError(EXPL.VIS[side].file_status, side, step, 'error downloading file', ADR(EXPL));
 				END_IF
-			// Error
-			ELSIF (FDelete.status <> ERR_FUB_BUSY) THEN
-				step := CreateError(FDelete.status, side, step, 'error deleting old zip file', ADR(EXPL));
 			END_IF
-		//**********************************************************************************************
-		// Download all files
-		//**********************************************************************************************
+			//**********************************************************************************************
+			// Download all files
+			//**********************************************************************************************
 		EXP_FILE_DOWNLOAD_DIR:
 			// Show current state
 			animation := WorkingStatus(ADR(EXPL), ADR('processing directory...'), animation);
@@ -995,154 +787,50 @@ PROGRAM _CYCLIC
 				device_active := 'TMP_USER';
 				dir_path := '';
 				step := EXP_FILE_DOWNLOAD;
-			// Error
+				// Error
 			ELSIF (zipArchive_0.status <> ERR_FUB_BUSY) THEN
 				step := CreateError(zipArchive_0.status, side, step, 'error creating zip file', ADR(EXPL));
 			END_IF
-		//**********************************************************************************************
-		// Upload file - verify parameters
-		//**********************************************************************************************
+			//**********************************************************************************************
+			// Upload file - verify parameters
+			//**********************************************************************************************
 		EXP_FILE_UPLOAD:
 			// Show current state
 			animation := WorkingStatus(ADR(EXPL), ADR('uploading file...'), animation);
 			
-			// Make sure data fits into memory
-			IF(WebServiceUpload[side].requestDataLen < EXPL_UPLOAD_DOWNLOAD_SIZE) THEN
-				// Find file name start
-				file_name_start := FindInMem(AsMemPartAllocClear_0.mem, WebServiceUpload[side].requestDataLen, ADR('filename="'), brsstrlen(ADR('filename="')), FALSE) + brsstrlen(ADR('filename="'));
-				IF(file_name_start > 0) THEN
-					// Find end of file name
-					file_name_len := FindInMem(AsMemPartAllocClear_0.mem+file_name_start, WebServiceUpload[side].requestDataLen-file_name_start, ADR('"$r$n'), brsstrlen(ADR('"$r$n')), FALSE);
-					IF(file_name_len > 0) THEN
-						// Make sure file name is not too long
-						IF(file_name_len <= EXPL_ITEM_LENGTH) THEN
-							// Store file name
-							brsmemset(ADR(item_name), 0, SIZEOF(item_name));
-							brsmemcpy(ADR(item_name), AsMemPartAllocClear_0.mem+file_name_start, file_name_len);
-							// Find start of data
-							file_data_start := FindInMem(AsMemPartAllocClear_0.mem, WebServiceUpload[side].requestDataLen, ADR('Content-Type:'), brsstrlen(ADR('Content-Type:')), FALSE) + brsstrlen(ADR('Content-Type:'));
-							IF(file_data_start > 0) THEN
-								// Find end of data
-								file_data_start := FindInMem(AsMemPartAllocClear_0.mem+file_data_start, WebServiceUpload[side].requestDataLen-file_data_start, ADR('$r$n$r$n'), brsstrlen(ADR('$r$n$r$n')), FALSE) + brsstrlen(ADR('$r$n$r$n')) + file_data_start;
-								file_data_len := FindInMem(AsMemPartAllocClear_0.mem+file_data_start, WebServiceUpload[side].requestDataLen-file_data_start, ADR('$r$n------'), brsstrlen(ADR('$r$n------')), TRUE);
-								// When file name and data is correct procceed with saving data to file
-								IF(file_data_len > 0) THEN
-									step := EXP_OVERWRITE_1;
-									RETURN;
-								ELSE
-									step := CreateError(ERR_SIZE_DATA_UPLOAD, side, step, 'data end not found in upload response', ADR(EXPL));
-								END_IF
-							// Data start not found in upload response
-							ELSE
-								step := CreateError(ERR_POS_DATA_UPLOAD, side, step, 'data start not found in upload response', ADR(EXPL));
-							END_IF
-						// File name is too long in upload response
-						ELSE
-							step := CreateError(ERR_LEN_NAME_UPLOAD, side, step, 'file name is too long in upload response', ADR(EXPL));
-						END_IF
-					// File name end not found in upload response
-					ELSE
-						step := CreateError(ERR_SIZE_NAME_UPLOAD, side, step, 'file name end not found in upload response', ADR(EXPL));
-					END_IF
-				// File name start not found in upload response
-				ELSE
-					step := CreateError(ERR_POS_NAME_UPLOAD, side, step, 'file name position not found in upload response', ADR(EXPL));
-				END_IF
-			// Upload file exceeds maximum buffer size
-			ELSE
-				tmp_str1 := 'upload file exceeds maximum buffer size of ';
-				brsitoa(EXPL_UPLOAD_DOWNLOAD_SIZE, ADR(tmp_str2));
-				brsstrcat(ADR(tmp_str1), ADR(tmp_str2));
-				brsstrcat(ADR(tmp_str1), ADR(' bytes'));
-				step := CreateError(ERR_MEM_UPLOAD, side, step, tmp_str1, ADR(EXPL));
-			END_IF
-			// Reset upload buffer and function block
-			brsmemset(AsMemPartAllocClear_0.mem, 0, EXPL_UPLOAD_DOWNLOAD_SIZE);
-			EXPL.VIS[side].reload_upload := TRUE;
-			WebServiceUpload[side].enable := FALSE;
-			WebServiceUpload[side]();
-		//**********************************************************************************************
-		// Upload file
-		//**********************************************************************************************
+			EXPL.VIS[side].file_full_path := device_active;
+			brsstrcat(ADR(EXPL.VIS[side].file_full_path), ADR(dir_path));
+			brsstrcat(ADR(EXPL.VIS[side].file_full_path), ADR('/'));
+
+			EXPL.VIS[side].file_status := 0;
+			EXPL.VIS[side].upload_execute := TRUE;
+			step := EXP_FILE_UPLOAD_1;
+			
+			//**********************************************************************************************
+			// Upload file
+			//**********************************************************************************************
 		EXP_FILE_UPLOAD_1:		
-			// ----------------------------------------------------------------------------------------
-			// Initialize file create structure
-			CreateCompletePath(EXPL.PAR[side].dir_path, item_name, ADR(tmp_str1));
-			FCreate.enable	:= TRUE;
-			FCreate.pDevice := ADR(EXPL.PAR[side].device_active);
-			FCreate.pFile	:= ADR(tmp_str1);
-			FCreate();
-			
-			// ----------------------------------------------------------------------------------------
-			// OK
-			IF (FCreate.status = OK) THEN
-				step := EXP_FILE_UPLOAD_2;
-			// Error
-			ELSIF (FCreate.status <> ERR_FUB_BUSY) THEN
-				step := CreateError(FCreate.status, side, step, 'error creating file from upload', ADR(EXPL));
-				// Reset upload buffer and function block
-				brsmemset(AsMemPartAllocClear_0.mem, 0, EXPL_UPLOAD_DOWNLOAD_SIZE);
-				EXPL.VIS[side].reload_upload := TRUE;
-				WebServiceUpload[side].enable := FALSE;
-				WebServiceUpload[side]();
-				FCreate.enable	:= FALSE;
-				FCreate();
-			END_IF
-		//**********************************************************************************************
-		// Upload file
-		//**********************************************************************************************
-		EXP_FILE_UPLOAD_2:
-			// Show current state
-			animation := WorkingStatus(ADR(EXPL), ADR('upload - saving file...'), animation);
-			
-			// ----------------------------------------------------------------------------------------
-			// Initialize file write structure
-			FWrite.enable	:= TRUE;
-			FWrite.ident	:= FCreate.ident;
-			FWrite.len		:= file_data_len;
-			FWrite.pSrc		:= AsMemPartAllocClear_0.mem + file_data_start;
-			FWrite();
-			
-			// ----------------------------------------------------------------------------------------
-			// OK
-			IF (FWrite.status = OK) THEN
-				step := EXP_FILE_UPLOAD_3;
-			// Error
-			ELSIF (FWrite.status <> ERR_FUB_BUSY) THEN
-				step := CreateError(FWrite.status, side, step, 'error writing file from upload', ADR(EXPL));
-			END_IF
-		//**********************************************************************************************
-		// Upload file
-		//**********************************************************************************************
-		EXP_FILE_UPLOAD_3:
-			// ----------------------------------------------------------------------------------------
-			// Initialize file close structure
-			FClose.enable	:= TRUE;
-			FClose.ident	:= FCreate.ident;
-			FClose();
-			
-			// ----------------------------------------------------------------------------------------
-			// OK
-			IF (FClose.status = OK) THEN
-				brsmemset(AsMemPartAllocClear_0.mem, 0, EXPL_UPLOAD_DOWNLOAD_SIZE);
-				WebServiceUpload[side].enable := FALSE;
-				WebServiceUpload[side]();
+			IF EDGENEG(EXPL.VIS[side].upload_execute) THEN
 				EXPL.CMD[side].upload := FALSE;
-				EXPL.VIS[side].reload_upload := TRUE;
-				// Report error from file write
-				IF (FWrite.status <> ERR_OK) THEN
-					step := CreateError(FWrite.status, side, step, 'error writing file from upload', ADR(EXPL));
-				ELSE
+				
+				// ----------------------------------------------------------------------------------------
+				// OK
+				IF (EXPL.VIS[side].file_status = OK) THEN
 					EXPL.CMD[side].refresh := 1;
+
 					step := EXP_WAIT;
+					// Error access rights 
+				ELSIF (EXPL.VIS[side].file_status = -1064165358) THEN
+					step := CreateError(EXPL.VIS[side].file_status, side, step, 'user  has insufficient rights to access file or device', ADR(EXPL));
+					// Error
+				ELSE
+					step := CreateError(EXPL.VIS[side].file_status, side, step, 'error uploading file', ADR(EXPL));
 				END_IF
-			// Error
-			ELSIF (FClose.status <> ERR_FUB_BUSY) THEN
-				step := CreateError(FClose.status, side, step, 'error closing file from upload', ADR(EXPL));
 			END_IF
-		//**********************************************************************************************
-		// Create new directory
-		//**********************************************************************************************
+
+			//**********************************************************************************************
+			// Create new directory
+			//**********************************************************************************************
 		EXP_DIR_CREATE:
 			// Show current state
 			animation := WorkingStatus(ADR(EXPL), ADR('creating directory...'), animation);
@@ -1162,13 +850,13 @@ PROGRAM _CYCLIC
 				EXPL.CMD[side].dir_create 	:= FALSE;
 				EXPL.CMD[side].refresh 		:= TRUE;
 				step := EXP_WAIT;
-			// Error
+				// Error
 			ELSIF (DCreate.status <> ERR_FUB_BUSY) THEN
 				step := CreateError(DCreate.status, side, step, 'error creating directory', ADR(EXPL));
 			END_IF
-		//**********************************************************************************************
-		// Delete selected directory
-		//**********************************************************************************************
+			//**********************************************************************************************
+			// Delete selected directory
+			//**********************************************************************************************
 		EXP_DIR_DELETE:
 			// Show current state
 			animation := WorkingStatus(ADR(EXPL), ADR('deleting directory...'), animation);
@@ -1188,13 +876,13 @@ PROGRAM _CYCLIC
 				EXPL.CMD[side].delete := FALSE;
 				EXPL.CMD[side].refresh := TRUE;
 				step := EXP_WAIT;
-			// Error
+				// Error
 			ELSIF (DDelete.status <> ERR_FUB_BUSY) THEN
 				step := CreateError(DDelete.status, side, step, 'error deleting directory', ADR(EXPL));
 			END_IF
-		//**********************************************************************************************
-		// Rename selected directory
-		//**********************************************************************************************
+			//**********************************************************************************************
+			// Rename selected directory
+			//**********************************************************************************************
 		EXP_DIR_RENAME:
 			// Show current state
 			animation := WorkingStatus(ADR(EXPL), ADR('renaming directory...'), animation);
@@ -1220,57 +908,47 @@ PROGRAM _CYCLIC
 			ELSIF (DRename.status <> ERR_FUB_BUSY) THEN
 				step := CreateError(DRename.status, side, step, 'error renaming directory', ADR(EXPL));
 			END_IF
-		//**********************************************************************************************
-		// Overwrite file - Check if file exists
-		//**********************************************************************************************
+			//**********************************************************************************************
+			// Overwrite file - Check if file exists
+			//**********************************************************************************************
 		EXP_OVERWRITE_1:					
+			EXPL.VIS[side].overwrite_response := NONE;
+
 			// ----------------------------------------------------------------------------------------
-			// Checking for files with the same name
-			EXPL.VIS[side].upload_overwrite_response := 0;
-			
+			// Checking for files with the same name		
 			FOR lx:=0 TO EXPL.DAT[side].item_num DO	
-				IF((EXPL.CMD[side].copy = TRUE AND EXPL.DAT[NOT side].item_list[lx] = item_name) OR (EXPL.CMD[side].upload = TRUE AND EXPL.DAT[side].item_list[lx] = item_name)) THEN
-					EXPL.VIS[side].upload_overwrite_request	:= TRUE;
+				IF(EXPL.CMD[side].copy = TRUE AND EXPL.DAT[NOT side].item_list[lx] = item_name) THEN
+					EXPL.VIS[side].overwrite_request := TRUE;
 					step := EXP_OVERWRITE_2;
 					RETURN;	 
 				END_IF;
 			END_FOR;
-			EXPL.VIS[side].upload_overwrite_response := SKIP;
-			step := EXP_OVERWRITE_2;
-		//**********************************************************************************************
-		// Overwrite file - Wait for message box response
-		//**********************************************************************************************
+			
+			// Proceed with copy command
+			IF(brsmemcmp(ADR(item_name), ADR('(DIR)'), 5) = 0)	THEN
+				step := EXP_DIR_COPY;
+			ELSE
+				step := EXP_FILE_COPY;
+			END_IF
+			//**********************************************************************************************
+			// Overwrite file - Wait for message box response
+			//**********************************************************************************************
 		EXP_OVERWRITE_2:
 			// Overwrite file
-			IF(EXPL.VIS[side].upload_overwrite_response = YES OR EXPL.VIS[side].upload_overwrite_response = SKIP) THEN
+			IF(EXPL.VIS[side].overwrite_response = YES) THEN
 				// Proceed with copy command
-				IF(EXPL.CMD[side].copy = TRUE) THEN
-					IF(brsmemcmp(ADR(item_name), ADR('(DIR)'), 5) = 0)	THEN
-						step := EXP_DIR_COPY;
-					ELSE
-						step := EXP_FILE_COPY;
-					END_IF
-				// Proceed with upload command
+				IF(brsmemcmp(ADR(item_name), ADR('(DIR)'), 5) = 0)	THEN
+					step := EXP_DIR_COPY;
 				ELSE
-					IF(EXPL.VIS[side].upload_overwrite_response = SKIP) THEN
-						step := EXP_FILE_UPLOAD_1;
-					ELSE
-						step := EXP_FILE_DELETE;
-					END_IF
+					step := EXP_FILE_COPY;
 				END_IF
-				EXPL.VIS[side].upload_overwrite_request	:= FALSE;
+				EXPL.VIS[side].overwrite_request := FALSE;
+
 			// Do not overwrite file
-			ELSIF(EXPL.VIS[side].upload_overwrite_response = NO) THEN
-				// Reset upload command
-				brsmemset(AsMemPartAllocClear_0.mem, 0, EXPL_UPLOAD_DOWNLOAD_SIZE);
-				WebServiceUpload[side].enable := FALSE;
-				WebServiceUpload[side]();
-				EXPL.CMD[side].upload := FALSE;
-				EXPL.VIS[side].reload_upload := TRUE;
+			ELSIF(EXPL.VIS[side].overwrite_response = NO) THEN
 				// Reset copy command				
 				EXPL.CMD[side].copy	:= FALSE;
-
-				EXPL.VIS[side].upload_overwrite_request	:= FALSE;
+				EXPL.VIS[side].overwrite_request := FALSE;
 				step := EXP_WAIT;
 			END_IF		
 	END_CASE

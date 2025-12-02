@@ -44,9 +44,6 @@ FUNCTION CreateError
 	// When error occurs in dir read call dir close before reporting error
 	IF (step = EXP_READ_DIR_2) THEN
 		CreateError := EXP_READ_DIR_3;
-	// When error occurs in file write call file close before reporting error
-	ELSIF(step = EXP_FILE_UPLOAD_2) THEN
-		CreateError := EXP_FILE_UPLOAD_3;
 	ELSE
 		// Reset all commands																				
 		brsmemset(ADR(EXPL.CMD[side]), 0, SIZEOF(EXPL.CMD[side]));

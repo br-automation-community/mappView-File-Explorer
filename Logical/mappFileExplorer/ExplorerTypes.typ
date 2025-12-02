@@ -24,16 +24,9 @@ TYPE
 		EXP_FILE_VIEW,
 		EXP_FILE_DOWNLOAD,
 		EXP_FILE_DOWNLOAD_1,
-		EXP_FILE_DOWNLOAD_2,
-		EXP_FILE_DOWNLOAD_3,
-		EXP_FILE_DOWNLOAD_4,
-		EXP_FILE_DOWNLOAD_5,
 		EXP_FILE_DOWNLOAD_DIR,
 		EXP_FILE_UPLOAD,
 		EXP_FILE_UPLOAD_1,
-		EXP_FILE_UPLOAD_2,
-		EXP_FILE_UPLOAD_3,
-		EXP_FILE_UPLOAD_4,
 		EXP_DIR_COPY,
 		EXP_DIR_CREATE,
 		EXP_DIR_DELETE,
@@ -77,9 +70,12 @@ TYPE
 		enable_button_set_2 : BOOL; (*Enable or disable buttons refresh and create*)
 		view_file_path : STRING[EXPL_DIR_PATH_LENGTH]; (*Full path for viewing file*)
 		view_file : BOOL; (*Show message box on error*)
-		download_file_url : STRING[200]; (*File upload and download url*)
-		upload_overwrite_request : BOOL; (*Show message box to overwrite file*)
-		upload_overwrite_response : USINT; (*Response from message box overwrite file*)
+		download_execute : BOOL; (*Start downloading file*)
+		file_status : DINT; (*Status of download and upload*)
+		upload_execute : BOOL; (*Start uploading file*)
+		file_full_path : STRING[EXPL_DIR_PATH_LENGTH]; (*File upload and download url*)
+		overwrite_request : BOOL; (*Show message box to overwrite file*)
+		overwrite_response : USINT; (*Response from message box overwrite file*)
 		reload_upload : BOOL; (*Reload upload button*)
 		double_click_event : USINT; (*Helper variable for double click in item list*)
 		device_list : ARRAY[0..6]OF STRING[80]; (* Device name *)
@@ -90,7 +86,7 @@ TYPE
 		DAT : ARRAY[0..1]OF expDAT; (*Data structure*)
 		VIS : ARRAY[0..1]OF expVIS; (*Visualization structure*)
 		ERR : expERR; (* Error structure *)
-		status_no : UINT; (*Shows the status as number*)
+		status_no : DINT; (*Shows the status as number*)
 		status_text : STRING[50]; (*Shows the status as text*)
 	END_STRUCT;
 END_TYPE

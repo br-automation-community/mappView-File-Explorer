@@ -1,3 +1,7 @@
+Version 2.0
+- Update to Automation Studio AS 6.3 and mapp 6.4
+- Replaced upload and download with transfer widget
+
 Version 1.9
 - Update to Automation Studio AS 4.12 and mapp 5.24
 

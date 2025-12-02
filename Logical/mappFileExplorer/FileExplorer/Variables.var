@@ -21,15 +21,6 @@ VAR
 	ly : UINT;
 	double_click_timer : TON_10ms;
 	device_active_old : ARRAY[0..1] OF STRING[40];
-	response_header : httpResponseHeader_t;
-	response_header_data : STRING[300];
-	download_timeout : TON_10ms;
-	upload_delay : TON_10ms;
-	upload_response : ARRAY[0..1] OF STRING[600];
-	file_name_start : UDINT;
-	file_name_len : UDINT;
-	file_data_start : UDINT;
-	file_data_len : UDINT;
 	dir_path : STRING[EXPL_DIR_PATH_LENGTH];
 	device_active : STRING[40];
 	item_name : STRING[EXPL_DIR_PATH_LENGTH];
@@ -40,11 +31,6 @@ VAR
 	DOpen : DirOpen;
 	DRead : DirReadEx;
 	DClose : DirClose;
-	FWrite : FileWrite;
-	FCreate : FileCreate;
-	FOpen : FileOpen;
-	FRead : FileReadEx;
-	FClose : FileClose;
 	FCopy : FileCopy;
 	FDelete : FileDelete;
 	FRename : FileRename;
@@ -55,17 +41,13 @@ VAR
 	DMemInfo : DevMemInfo;
 	DevLink_0 : DevLink;
 	lDirReadData : fiDIR_READ_EX_DATA;
-	AsMemPartCreate_0 : AsMemPartCreate;
-	AsMemPartAllocClear_0 : AsMemPartAllocClear;
-	WebServiceUpload : ARRAY[0..1] OF httpService := [2((0))];
-	WebserviceDownload : httpService := (0);
 	zipArchive_0 : zipArchive;
 END_VAR
 (*Local constants*)
 VAR CONSTANT
+	NONE : USINT := 0;
 	YES : USINT := 1;
 	NO : USINT := 2;
-	SKIP : USINT := 3;
 	ERR_EMPTY_ITEM : UINT := 50000; (*Selected item name is empty	*)
 	ERR_INVALID_ITEM_NAME : UINT := 50001; (*This is not a valid item name*)
 	ERR_DEVICE_UNDEFINED : UINT := 50010; (*Device is not defined*)
@@ -75,14 +57,5 @@ VAR CONSTANT
 	ERR_PATH_EXCEEDS_MAX : UINT := 50202; (*Directory path exceeds maximum length*)
 	ERR_PATH_CRITICAL : UINT := 50203; (*Directory path critical error*)
 	ERR_PATH_RECURSIVE : UINT := 50204; (*Can not copy directory into itself*)
-	ERR_MEM_ALLOC : UINT := 50300; (*Memory allocation for file upload and download failed*)
-	ERR_MEM_DOWNLOAD : UINT := 50310; (*Size of download file exceeds maximum*)
-	ERR_TIMEOUT_DOWNLOAD : UINT := 50320; (*Download response timed out*)
 	ERR_DIR_DOWNLOAD_INVALID : UINT := 50331; (*This is not a valid directory for downloading*)
-	ERR_POS_NAME_UPLOAD : UINT := 50400; (*Can not find filename in upload response*)
-	ERR_SIZE_NAME_UPLOAD : UINT := 50401; (*Can not determine end of filename in upload response*)
-	ERR_LEN_NAME_UPLOAD : UINT := 50402; (*Filename is too long in upload response*)
-	ERR_POS_DATA_UPLOAD : UINT := 50403; (*Can not find data in upload response*)
-	ERR_SIZE_DATA_UPLOAD : UINT := 50404; (*Can not determine end of data in upload response*)
-	ERR_MEM_UPLOAD : UINT := 50410; (*Size of upload file exceeds maximum size*)
 END_VAR

@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Content id="contentExplorer" height="800" width="1200" xmlns="http://www.br-automation.com/iat2015/contentDefinition/v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:types="http://www.br-automation.com/iat2015/widgetTypes/v2">
+<Content id="contentExplorer" guid="d1e84a2a-7b26-42fb-962a-bcb852a57d8a" height="800" width="1200" xmlns="http://www.br-automation.com/iat2015/contentDefinition/v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:types="http://www.br-automation.com/iat2015/widgetTypes/v2">
   <Widgets>
-    <Widget xsi:type="widgets.brease.GroupBox" id="grpFileExplorerA" top="125" left="5" width="505" height="670" zIndex="0" text="Side A">
+    <Widget xsi:type="widgets.brease.GroupBox" id="grpFileExplorerA" top="135" left="5" width="505" height="660" zIndex="0" text="Side A">
       <Widgets>
-        <Widget xsi:type="widgets.brease.Button" id="btnDeleteA" top="473" left="129" width="110" zIndex="13" text="Delete" cornerRadius="5px" backGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#f60909 100%)" />
+        <Widget xsi:type="widgets.brease.Button" id="btnDeleteA" top="463" left="129" width="110" zIndex="13" text="Delete" cornerRadius="5px" backGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#f60909 100%)" />
         <Widget xsi:type="widgets.brease.Label" id="labDirPathA" top="403" left="9" width="40" height="22" zIndex="14" text="Path" textAlign="right" fontSize="14px" />
         <Widget xsi:type="widgets.brease.TextOutput" id="txtDirPathA" top="403" left="54" width="436" height="22" zIndex="15" borderWidth="1px" cornerRadius="5px" borderColor="rgba(200, 200, 200, 1)" borderStyle="solid" textColor="rgba(71, 71, 71, 1)" fontSize="14px" padding="0px 5px 0px 5px" />
-        <Widget xsi:type="widgets.brease.TextInput" id="txtNewDirA" top="558" left="95" width="395" height="28" zIndex="20" fontSize="14px" />
-        <Widget xsi:type="widgets.brease.Button" id="btnDirCreateA" top="593" left="254" width="110" zIndex="21" text="New folder" cornerRadius="5px" />
+        <Widget xsi:type="widgets.brease.TextInput" id="txtNewDirA" top="548" left="95" width="395" height="28" zIndex="20" fontSize="14px" />
+        <Widget xsi:type="widgets.brease.Button" id="btnDirCreateA" top="583" left="254" width="110" zIndex="21" text="New folder" cornerRadius="5px" />
         <Widget xsi:type="widgets.brease.Label" id="labFilterA" top="43" left="13" width="56" height="27" zIndex="24" text="Filter" textAlign="right" />
         <Widget xsi:type="widgets.brease.TextInput" id="txtFilterA" top="45" left="74" width="366" height="25" zIndex="25" fontSize="14px" padding="0px 5px 0px 5px" />
-        <Widget xsi:type="widgets.brease.Button" id="btnRefreshA" top="473" left="254" width="110" zIndex="1" text="Refresh" cornerRadius="5px" />
-        <Widget xsi:type="widgets.brease.DropDownBox" id="ddbDeviceA" top="8" left="74" width="200" zIndex="3" dataProvider="[]" maxVisibleEntries="6" />
+        <Widget xsi:type="widgets.brease.Button" id="btnRefreshA" top="463" left="254" width="110" zIndex="1" text="Refresh" cornerRadius="5px" />
+        <Widget xsi:type="widgets.brease.DropDownBox" id="ddbDeviceA" top="8" left="74" width="200" zIndex="3" maxVisibleEntries="6" />
         <Widget xsi:type="widgets.brease.Label" id="labDeviceA" top="8" left="14" width="55" zIndex="4" text="Device" textAlign="right" />
         <Widget xsi:type="widgets.brease.Label" id="labItemsA" top="428" left="369" width="60" height="20" zIndex="7" text="Items" textColor="rgba(71, 71, 71, 1)" textAlign="right" fontSize="14px" />
         <Widget xsi:type="widgets.brease.NumericOutput" id="numItemsA" top="428" left="429" width="60" height="22" zIndex="8" format="{'metric':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial-us':{'decimalPlaces':0,'minimumIntegerDigits':1}}" borderWidth="1px" cornerRadius="5px" borderColor="rgba(200, 200, 200, 1)" textColor="rgba(71, 71, 71, 1)" fontSize="14px" padding="0px 5px 0px 5px" />
@@ -21,30 +21,28 @@
             <Widget xsi:type="widgets.brease.TableItem" id="tableSizeA" zIndex="1" columnWidth="70" rowHeight="26" text="Size" cellAlign="right center" />
           </Widgets>
         </Widget>
-        <Widget xsi:type="widgets.brease.Label" id="labExpNewNameA" top="565" left="9" width="81" height="16" zIndex="26" text="New Name" textAlign="right" padding="0px" />
-        <Widget xsi:type="widgets.brease.Button" id="btnExpRenameA" top="593" left="379" width="110" zIndex="27" text="Rename" cornerRadius="5px" />
-        <Widget xsi:type="widgets.brease.Button" id="btnViewFileA" top="473" left="379" width="110" zIndex="28" text="View" cornerRadius="5px" />
-        <Widget xsi:type="widgets.brease.Button" id="btnDownloadFileA" top="513" left="379" width="110" zIndex="29" text="Download" cornerRadius="5px" />
-        <Widget xsi:type="widgets.brease.Button" id="btnUploadFileA" top="513" left="254" width="110" zIndex="30" cornerRadius="5px" />
-        <Widget xsi:type="widgets.brease.WebViewer" id="WebUploadA" top="513" left="264" width="100" height="45" zIndex="31" path="uploadA.html" backColor="rgba(255, 255, 255, 0)" borderStyle="none" borderWidth="0px 0px 0px 0px" />
-        <Widget xsi:type="widgets.brease.WebViewer" id="WebDownloadA" top="515" left="385" width="99" height="28" zIndex="32" path="" borderStyle="none" visible="false" />
-        <Widget xsi:type="widgets.brease.Label" id="labMemory1A" top="428" left="120" width="40" height="22" zIndex="33" text="MB of" textAlign="center" fontSize="14px" padding="0px" />
-        <Widget xsi:type="widgets.brease.NumericOutput" id="numMemInfo1A" top="428" left="54" width="60" height="22" zIndex="34" format="{'metric':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial-us':{'decimalPlaces':0,'minimumIntegerDigits':1}}" borderWidth="1px" cornerRadius="5px" borderColor="rgba(200, 200, 200, 1)" textColor="rgba(71, 71, 71, 1)" fontSize="14px" padding="0px 5px 0px 5px" />
-        <Widget xsi:type="widgets.brease.NumericOutput" id="numMemInfo2A" top="428" left="164" width="60" height="22" zIndex="35" format="{'metric':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial-us':{'decimalPlaces':0,'minimumIntegerDigits':1}}" borderWidth="1px" cornerRadius="5px" borderColor="rgba(200, 200, 200, 1)" textColor="rgba(71, 71, 71, 1)" fontSize="14px" padding="0px 5px 0px 5px" />
-        <Widget xsi:type="widgets.brease.Label" id="labMemory2A" top="428" left="234" width="51" height="22" zIndex="36" text="MB free" textAlign="left" fontSize="14px" padding="0px" />
+        <Widget xsi:type="widgets.brease.Label" id="labExpNewNameA" top="555" left="10" width="81" height="16" zIndex="26" text="New Name" textAlign="right" padding="0px" />
+        <Widget xsi:type="widgets.brease.Button" id="btnExpRenameA" top="583" left="379" width="110" zIndex="27" text="Rename" cornerRadius="5px" />
+        <Widget xsi:type="widgets.brease.Button" id="btnViewFileA" top="463" left="379" width="110" zIndex="28" text="View" cornerRadius="5px" />
+        <Widget xsi:type="widgets.brease.Label" id="labMemory1A" top="428" left="120" width="40" height="22" zIndex="29" text="MB of" textAlign="center" fontSize="14px" padding="0px" />
+        <Widget xsi:type="widgets.brease.NumericOutput" id="numMemInfo1A" top="428" left="54" width="60" height="22" zIndex="30" format="{'metric':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial-us':{'decimalPlaces':0,'minimumIntegerDigits':1}}" borderWidth="1px" cornerRadius="5px" borderColor="rgba(200, 200, 200, 1)" textColor="rgba(71, 71, 71, 1)" fontSize="14px" padding="0px 5px 0px 5px" />
+        <Widget xsi:type="widgets.brease.NumericOutput" id="numMemInfo2A" top="428" left="164" width="60" height="22" zIndex="31" format="{'metric':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial-us':{'decimalPlaces':0,'minimumIntegerDigits':1}}" borderWidth="1px" cornerRadius="5px" borderColor="rgba(200, 200, 200, 1)" textColor="rgba(71, 71, 71, 1)" fontSize="14px" padding="0px 5px 0px 5px" />
+        <Widget xsi:type="widgets.brease.Label" id="labMemory2A" top="428" left="234" width="51" height="22" zIndex="32" text="MB free" textAlign="left" fontSize="14px" padding="0px" />
+        <Widget xsi:type="widgets.brXtended.ButtonTransfer" id="btnDownloadA" top="508" left="379" width="110" zIndex="33" text="Download" borderWidth="0px" cornerRadius="5px" backGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#C6C6C6 100%)" disabledBackGroundGradient="linear-gradient(to bottom, #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%)" mouseDownBackGroundGradient="linear-gradient(to bottom, #4A4A4A 0%,#7C7C7C 100%)" textColor="rgba(71, 71, 71, 1)" mouseDownBorderWidth="0px" fontSize="16px" bold="true" shadow="4px 4px 14px rgba(62, 79, 92, 0.75)" mouseDownShadow="2px 2px 8px rgba(62, 79, 92, 0.75)" />
+        <Widget xsi:type="widgets.brXtended.ButtonTransfer" id="btnUploadA" top="508" left="254" width="110" zIndex="34" text="Upload" borderWidth="0px" cornerRadius="5px" backGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#C6C6C6 100%)" disabledBackGroundGradient="linear-gradient(to bottom, #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%)" mouseDownBackGroundGradient="linear-gradient(to bottom, #4A4A4A 0%,#7C7C7C 100%)" textColor="rgba(71, 71, 71, 1)" mouseDownBorderWidth="0px" fontSize="16px" bold="true" shadow="4px 4px 14px rgba(62, 79, 92, 0.75)" mouseDownShadow="2px 2px 8px rgba(62, 79, 92, 0.75)" />
       </Widgets>
     </Widget>
-    <Widget xsi:type="widgets.brease.GroupBox" id="grpFileExplorerB" top="125" left="690" width="505" height="670" zIndex="15" text="Side B">
+    <Widget xsi:type="widgets.brease.GroupBox" id="grpFileExplorerB" top="135" left="690" width="505" height="660" zIndex="15" text="Side B">
       <Widgets>
-        <Widget xsi:type="widgets.brease.Button" id="btnDeleteB" top="473" left="124" width="110" zIndex="20" text="Delete" cornerRadius="5px" backGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#f60909 100%)" />
-        <Widget xsi:type="widgets.brease.TextInput" id="txtNewDirB" top="558" left="100" width="385" height="28" zIndex="24" />
-        <Widget xsi:type="widgets.brease.Button" id="btnDirCreateB" top="593" left="249" width="110" zIndex="25" text="New folder" cornerRadius="5px" />
+        <Widget xsi:type="widgets.brease.Button" id="btnDeleteB" top="463" left="129" width="110" zIndex="20" text="Delete" cornerRadius="5px" backGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#f60909 100%)" />
+        <Widget xsi:type="widgets.brease.TextInput" id="txtNewDirB" top="548" left="105" width="385" height="28" zIndex="24" />
+        <Widget xsi:type="widgets.brease.Button" id="btnDirCreateB" top="583" left="254" width="110" zIndex="25" text="New folder" cornerRadius="5px" />
         <Widget xsi:type="widgets.brease.Label" id="labFilterB" top="45" left="19" width="56" height="22" zIndex="28" text="Filter" textAlign="right" />
         <Widget xsi:type="widgets.brease.TextInput" id="txtFilterB" top="45" left="79" width="366" height="25" zIndex="29" fontSize="14px" padding="0px 5px 0px 5px" />
         <Widget xsi:type="widgets.brease.Label" id="labDirPathB" top="408" left="9" width="40" height="15" zIndex="16" text="Path" textAlign="right" fontSize="14px" />
         <Widget xsi:type="widgets.brease.TextOutput" id="txtDirPathB" top="403" left="55" width="435" height="25" zIndex="17" borderWidth="1px" cornerRadius="5px" borderStyle="solid" fontSize="14px" padding="0px 5px 0px 5px" />
-        <Widget xsi:type="widgets.brease.Button" id="btnRefreshB" top="473" left="249" width="110" zIndex="2" text="Refresh" cornerRadius="5px" />
-        <Widget xsi:type="widgets.brease.DropDownBox" id="ddbDeviceB" top="8" left="79" width="200" zIndex="5" dataProvider="[]" maxVisibleEntries="6" />
+        <Widget xsi:type="widgets.brease.Button" id="btnRefreshB" top="463" left="254" width="110" zIndex="2" text="Refresh" cornerRadius="5px" />
+        <Widget xsi:type="widgets.brease.DropDownBox" id="ddbDeviceB" top="8" left="79" width="200" zIndex="5" maxVisibleEntries="6" />
         <Widget xsi:type="widgets.brease.Label" id="labDeviceB" top="8" left="14" width="60" zIndex="6" text="Device" textAlign="right" />
         <Widget xsi:type="widgets.brease.Label" id="labItemsB" top="433" left="369" width="60" height="20" zIndex="9" text="Items" textAlign="right" fontSize="14px" />
         <Widget xsi:type="widgets.brease.NumericOutput" id="numItemsB" top="433" left="429" width="60" height="20" zIndex="10" format="{'metric':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial-us':{'decimalPlaces':0,'minimumIntegerDigits':1}}" borderWidth="1px" cornerRadius="5px" fontSize="14px" padding="0px 5px 0px 5px" />
@@ -55,38 +53,37 @@
           </Widgets>
         </Widget>
         <Widget xsi:type="widgets.brease.Button" id="btnClearFilterB" top="43" left="459" width="30" zIndex="30" text="X" cornerRadius="5px" />
-        <Widget xsi:type="widgets.brease.Label" id="labExpNewNameB" top="565" left="14" width="81" height="15" zIndex="31" text="New Name" textAlign="right" padding="0px" />
-        <Widget xsi:type="widgets.brease.Button" id="btnExpRenameB" top="593" left="374" width="110" zIndex="32" text="Rename" cornerRadius="5px" />
-        <Widget xsi:type="widgets.brease.Button" id="btnViewFileB" top="473" left="374" width="110" zIndex="33" text="View" cornerRadius="5px" />
-        <Widget xsi:type="widgets.brease.Button" id="btnDownloadFileB" top="513" left="374" width="110" zIndex="34" text="Download" cornerRadius="5px" />
-        <Widget xsi:type="widgets.brease.Button" id="btnUploadFileB" top="513" left="249" width="110" zIndex="35" cornerRadius="5px" />
-        <Widget xsi:type="widgets.brease.WebViewer" id="WebUploadB" top="513" left="259" width="100" height="45" zIndex="36" path="uploadB.html" backColor="rgba(255, 255, 255, 0)" borderStyle="none" borderWidth="0px 0px 0px 0px" />
-        <Widget xsi:type="widgets.brease.WebViewer" id="WebDownloadB" top="515" left="384" width="101" height="28" zIndex="37" path="" borderStyle="none" visible="false" />
-        <Widget xsi:type="widgets.brease.Label" id="labMemoryB1" top="433" left="120" width="40" height="22" zIndex="38" text="MB of" textAlign="center" fontSize="14px" padding="0px" />
-        <Widget xsi:type="widgets.brease.NumericOutput" id="numMemInfobB1" top="433" left="54" width="60" height="22" zIndex="39" format="{'metric':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial-us':{'decimalPlaces':0,'minimumIntegerDigits':1}}" borderWidth="1px" cornerRadius="5px" borderColor="rgba(200, 200, 200, 1)" textColor="rgba(71, 71, 71, 1)" fontSize="14px" padding="0px 5px 0px 5px" />
-        <Widget xsi:type="widgets.brease.NumericOutput" id="numMemInfoB2" top="433" left="164" width="60" height="22" zIndex="40" format="{'metric':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial-us':{'decimalPlaces':0,'minimumIntegerDigits':1}}" borderWidth="1px" cornerRadius="5px" borderColor="rgba(200, 200, 200, 1)" textColor="rgba(71, 71, 71, 1)" fontSize="14px" padding="0px 5px 0px 5px" />
-        <Widget xsi:type="widgets.brease.Label" id="labMemoryB2" top="433" left="234" width="51" height="22" zIndex="41" text="MB free" textAlign="left" fontSize="14px" padding="0px" />
+        <Widget xsi:type="widgets.brease.Label" id="labExpNewNameB" top="553" left="14" width="81" height="15" zIndex="31" text="New Name" textAlign="right" padding="0px" />
+        <Widget xsi:type="widgets.brease.Button" id="btnExpRenameB" top="583" left="379" width="110" zIndex="32" text="Rename" cornerRadius="5px" />
+        <Widget xsi:type="widgets.brease.Button" id="btnViewFileB" top="463" left="379" width="110" zIndex="33" text="View" cornerRadius="5px" />
+        <Widget xsi:type="widgets.brease.Label" id="labMemoryB1" top="433" left="120" width="40" height="22" zIndex="34" text="MB of" textAlign="center" fontSize="14px" padding="0px" />
+        <Widget xsi:type="widgets.brease.NumericOutput" id="numMemInfobB1" top="433" left="54" width="60" height="22" zIndex="35" format="{'metric':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial-us':{'decimalPlaces':0,'minimumIntegerDigits':1}}" borderWidth="1px" cornerRadius="5px" borderColor="rgba(200, 200, 200, 1)" textColor="rgba(71, 71, 71, 1)" fontSize="14px" padding="0px 5px 0px 5px" />
+        <Widget xsi:type="widgets.brease.NumericOutput" id="numMemInfoB2" top="433" left="164" width="60" height="22" zIndex="36" format="{'metric':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial-us':{'decimalPlaces':0,'minimumIntegerDigits':1}}" borderWidth="1px" cornerRadius="5px" borderColor="rgba(200, 200, 200, 1)" textColor="rgba(71, 71, 71, 1)" fontSize="14px" padding="0px 5px 0px 5px" />
+        <Widget xsi:type="widgets.brease.Label" id="labMemoryB2" top="433" left="234" width="51" height="22" zIndex="37" text="MB free" textAlign="left" fontSize="14px" padding="0px" />
+        <Widget xsi:type="widgets.brXtended.ButtonTransfer" id="btnDownloadB" top="508" left="379" width="110" zIndex="38" text="Download" borderWidth="0px" cornerRadius="5px" backGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#C6C6C6 100%)" disabledBackGroundGradient="linear-gradient(to bottom, #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%)" mouseDownBackGroundGradient="linear-gradient(to bottom, #4A4A4A 0%,#7C7C7C 100%)" textColor="rgba(71, 71, 71, 1)" mouseDownBorderWidth="0px" fontSize="16px" bold="true" shadow="4px 4px 14px rgba(62, 79, 92, 0.75)" mouseDownShadow="2px 2px 8px rgba(62, 79, 92, 0.75)" />
+        <Widget xsi:type="widgets.brXtended.ButtonTransfer" id="btnUploadB" top="508" left="254" width="110" zIndex="39" text="Upload" borderWidth="0px" cornerRadius="5px" backGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#C6C6C6 100%)" disabledBackGroundGradient="linear-gradient(to bottom, #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%)" mouseDownBackGroundGradient="linear-gradient(to bottom, #4A4A4A 0%,#7C7C7C 100%)" textColor="rgba(71, 71, 71, 1)" mouseDownBorderWidth="0px" fontSize="16px" bold="true" shadow="4px 4px 14px rgba(62, 79, 92, 0.75)" mouseDownShadow="2px 2px 8px rgba(62, 79, 92, 0.75)" />
       </Widgets>
     </Widget>
-    <Widget xsi:type="widgets.brease.GroupBox" id="grpFileExplorerStatus" top="5" left="5" width="1190" height="115" zIndex="1" text="Status">
+    <Widget xsi:type="widgets.brease.GroupBox" id="grpFileExplorerStatus" top="5" left="5" width="1190" height="125" zIndex="1" text="Status">
       <Widgets>
-        <Widget xsi:type="widgets.brease.Label" id="labStatusText" top="5" left="10" width="90" zIndex="0" text="Status Text" textAlign="right" />
-        <Widget xsi:type="widgets.brease.TextOutput" id="txtStatusText" top="6" left="104" width="361" height="27" zIndex="1" borderWidth="1px" cornerRadius="5px" borderStyle="solid" padding="0px 5px 0px 5px" />
-        <Widget xsi:type="widgets.brease.Label" id="labErrorText" top="43" left="24" width="76" zIndex="2" text="Error Text" textAlign="right" />
-        <Widget xsi:type="widgets.brease.TextOutput" id="txtError" top="43" left="104" width="851" height="27" zIndex="3" borderWidth="1px" cornerRadius="5px" borderStyle="solid" padding="0px 5px 0px 5px" />
-        <Widget xsi:type="widgets.brease.Label" id="labStatusNo" top="5" left="494" width="76" zIndex="4" text="Status No" textAlign="right" />
-        <Widget xsi:type="widgets.brease.NumericOutput" id="numStatusNo" top="6" left="574" width="91" height="27" zIndex="5" format="{'metric':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial':{'decimalPlaces':0,'minimumIntegerDigits':1},'imperial-us':{'decimalPlaces':0,'minimumIntegerDigits':1}}" borderWidth="1px" cornerRadius="5px" padding="0px 5px 0px 5px" />
-        <Widget xsi:type="widgets.brease.ToggleButton" id="btnNETconnected" top="8" left="754" width="200" zIndex="6" mouseDownText="Network connected" text="Network disconnected" backGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#f60909 100%)" disabledBackGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#f60909 100%)" checkedBackGroundGradient="linear-gradient(to bottom, #4A4A4A 0%,#29920c 100%)" disabledCheckedBackGroundGradient="linear-gradient(to bottom, #4A4A4A 0%,#29920c 100%)" enable="false" />
-        <Widget xsi:type="widgets.brease.Label" id="labUSBconnected" top="5" left="1015" width="140" height="25" zIndex="7" text="USB Connected" textAlign="center" />
-        <Widget xsi:type="widgets.brease.ToggleButton" id="btnUSBconnected1" top="33" left="1014" width="35" height="35" zIndex="8" mouseDownText="1" text="1" backGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#f60909 100%)" disabledBackGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#f60909 100%)" checkedBackGroundGradient="linear-gradient(to bottom, #4A4A4A 0%,#29920c 100%)" disabledCheckedBackGroundGradient="linear-gradient(to bottom, #4A4A4A 0%,#29920c 100%)" enable="false" />
-        <Widget xsi:type="widgets.brease.ToggleButton" id="btnUSBconnected2" top="33" left="1064" width="35" height="35" zIndex="9" mouseDownText="2" text="2" backGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#f60909 100%)" disabledBackGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#f60909 100%)" checkedBackGroundGradient="linear-gradient(to bottom, #4A4A4A 0%,#29920c 100%)" disabledCheckedBackGroundGradient="linear-gradient(to bottom, #4A4A4A 0%,#29920c 100%)" enable="false" />
-        <Widget xsi:type="widgets.brease.ToggleButton" id="btnUSBconnected3" top="33" left="1114" width="35" height="35" zIndex="10" mouseDownText="3" text="3" backGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#f60909 100%)" disabledBackGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#f60909 100%)" checkedBackGroundGradient="linear-gradient(to bottom, #4A4A4A 0%,#29920c 100%)" disabledCheckedBackGroundGradient="linear-gradient(to bottom, #4A4A4A 0%,#29920c 100%)" enable="false" />
+        <Widget xsi:type="widgets.brease.Label" id="labStatusText" top="6" left="5" width="90" zIndex="0" text="Status Text" textAlign="right" />
+        <Widget xsi:type="widgets.brease.TextOutput" id="txtStatusText" top="8" left="99" width="481" height="25" zIndex="1" borderWidth="1px" cornerRadius="5px" borderStyle="solid" padding="0px 5px 0px 5px" />
+        <Widget xsi:type="widgets.brease.Label" id="labErrorText" top="48" left="19" width="76" zIndex="2" text="Error Text" textAlign="right" />
+        <Widget xsi:type="widgets.brease.TextOutput" id="txtError" top="51" left="99" width="711" height="25" zIndex="3" borderWidth="1px" cornerRadius="5px" borderStyle="solid" padding="0px 5px 0px 5px" />
+        <Widget xsi:type="widgets.brease.Label" id="labStatusNo" top="6" left="604" width="76" zIndex="4" text="Status No" textAlign="right" />
+        <Widget xsi:type="widgets.brease.NumericOutput" id="numStatusNo" top="8" left="684" width="126" height="25" zIndex="5" format="{'metric':{'decimalPlaces':0,'minimumIntegerDigits':10},'imperial':{'decimalPlaces':0,'minimumIntegerDigits':10},'imperial-us':{'decimalPlaces':0,'minimumIntegerDigits':10}}" borderWidth="1px" cornerRadius="5px" padding="0px 2px 0px 2px" />
+        <Widget xsi:type="widgets.brease.LoginButton" id="LoginButton" top="8" left="1070" zIndex="6" text="Login" />
+        <Widget xsi:type="widgets.brease.LogoutButton" id="LogoutButton" top="48" left="1069" zIndex="7" text="Logout" />
+        <Widget xsi:type="widgets.brease.TextInput" id="txtUser" top="8" left="924" width="120" zIndex="8" />
+        <Widget xsi:type="widgets.brease.Label" id="labUser" top="8" left="834" width="90" zIndex="9" text="User" textAlign="right" />
+        <Widget xsi:type="widgets.brease.Label" id="labPassword" top="48" left="834" width="90" zIndex="10" text="Password" textAlign="right" />
+        <Widget xsi:type="widgets.brease.Password" id="txtPassword" top="48" left="924" width="120" zIndex="11" />
       </Widgets>
     </Widget>
-    <Widget xsi:type="widgets.brease.Button" id="btnCopyA" top="270" left="525" width="150" height="40" zIndex="11" text="Copy &gt;" cornerRadius="10px" />
-    <Widget xsi:type="widgets.brease.Button" id="btnCopyAllA" top="320" left="525" width="150" height="40" zIndex="12" text="Copy All &gt;" cornerRadius="10px" />
-    <Widget xsi:type="widgets.brease.Button" id="btnCopyB" top="430" left="525" width="150" height="40" zIndex="13" text="&lt; Copy" cornerRadius="10px" />
-    <Widget xsi:type="widgets.brease.Button" id="btnCopyAllB" top="480" left="525" width="150" height="40" zIndex="14" text="&lt; Copy All" cornerRadius="10px" />
+    <Widget xsi:type="widgets.brease.Button" id="btnCopyA" top="305" left="525" width="150" height="40" zIndex="11" text="Copy &gt;" cornerRadius="10px" />
+    <Widget xsi:type="widgets.brease.Button" id="btnCopyAllA" top="355" left="525" width="150" height="40" zIndex="12" text="Copy All &gt;" cornerRadius="10px" />
+    <Widget xsi:type="widgets.brease.Button" id="btnCopyB" top="465" left="525" width="150" height="40" zIndex="13" text="&lt; Copy" cornerRadius="10px" />
+    <Widget xsi:type="widgets.brease.Button" id="btnCopyAllB" top="515" left="525" width="150" height="40" zIndex="14" text="&lt; Copy All" cornerRadius="10px" />
     <Widget xsi:type="widgets.brease.Button" id="btnClearFilterA" top="205" left="460" width="30" zIndex="16" text="X" cornerRadius="5px" />
     <Widget xsi:type="widgets.brease.FlyOut" id="flyConfiguration" top="0" left="520" width="600" height="700" zIndex="17" autoClose="true" buttonOffset="10" docking="bottom" text="Configuration" buttonWidth="150" buttonCornerRadius="10px" fontSize="16px">
       <Widgets>
@@ -144,5 +141,11 @@
         <Widget xsi:type="widgets.brease.Button" id="btnCloseViewFile" top="10" left="10" width="164" height="40" zIndex="1" text="Close" cornerRadius="10px" />
       </Widgets>
     </Widget>
+    <Widget xsi:type="widgets.brease.ToggleButton" id="btnNETconnected" top="215" left="520" width="161" height="35" zIndex="34" mouseDownText="Network connected" text="Network disconnected" backGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#f60909 100%)" disabledBackGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#f60909 100%)" fontSize="12px" checkedBackGroundGradient="linear-gradient(to bottom, #4A4A4A 0%,#29920c 100%)" disabledCheckedBackGroundGradient="linear-gradient(to bottom, #4A4A4A 0%,#29920c 100%)" enable="false" />
+    <Widget xsi:type="widgets.brease.Label" id="labUSBconnected" top="140" left="530" width="140" height="25" zIndex="35" text="USB Connected" textAlign="center" />
+    <Widget xsi:type="widgets.brease.ToggleButton" id="btnUSBconnected1" top="170" left="535" width="30" zIndex="36" mouseDownText="1" text="1" backGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#f60909 100%)" disabledBackGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#f60909 100%)" checkedBackGroundGradient="linear-gradient(to bottom, #4A4A4A 0%,#29920c 100%)" disabledCheckedBackGroundGradient="linear-gradient(to bottom, #4A4A4A 0%,#29920c 100%)" enable="false" />
+    <Widget xsi:type="widgets.brease.ToggleButton" id="btnUSBconnected2" top="170" left="585" width="30" zIndex="37" mouseDownText="2" text="2" backGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#f60909 100%)" disabledBackGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#f60909 100%)" checkedBackGroundGradient="linear-gradient(to bottom, #4A4A4A 0%,#29920c 100%)" disabledCheckedBackGroundGradient="linear-gradient(to bottom, #4A4A4A 0%,#29920c 100%)" enable="false" />
+    <Widget xsi:type="widgets.brease.ToggleButton" id="btnUSBconnected3" top="170" left="635" width="30" zIndex="38" mouseDownText="3" text="3" backGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#f60909 100%)" disabledBackGroundGradient="linear-gradient(to bottom,#F7F7F7 0%,#f60909 100%)" checkedBackGroundGradient="linear-gradient(to bottom, #4A4A4A 0%,#29920c 100%)" disabledCheckedBackGroundGradient="linear-gradient(to bottom, #4A4A4A 0%,#29920c 100%)" enable="false" />
+    <Widget xsi:type="widgets.brease.LoginInfo" id="LoginInfo1" top="10" left="1060" zIndex="39" />
   </Widgets>
 </Content>

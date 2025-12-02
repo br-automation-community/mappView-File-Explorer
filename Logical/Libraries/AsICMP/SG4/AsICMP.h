@@ -15,29 +15,6 @@ extern "C"
 #ifndef _BUR_PUBLIC
 #define _BUR_PUBLIC
 #endif
-/* Constants */
-#ifdef _REPLACE_CONST
- #define icmpERR_SYSTEM 32799U
- #define icmpERR_FIREWALL 32754U
- #define icmpERR_UNREACHABLE 32753U
- #define icmpERR_SOCKET_CREATE 32752U
- #define icmpERR_PARAMETER 32751U
- #define icmpERR_NO_RESPONSE 32750U
-#else
- #ifndef _GLOBAL_CONST
-   #define _GLOBAL_CONST _WEAK const
- #endif
- _GLOBAL_CONST unsigned short icmpERR_SYSTEM;
- _GLOBAL_CONST unsigned short icmpERR_FIREWALL;
- _GLOBAL_CONST unsigned short icmpERR_UNREACHABLE;
- _GLOBAL_CONST unsigned short icmpERR_SOCKET_CREATE;
- _GLOBAL_CONST unsigned short icmpERR_PARAMETER;
- _GLOBAL_CONST unsigned short icmpERR_NO_RESPONSE;
-#endif
-
-
-
-
 /* Datatypes and datatypes of function blocks */
 typedef struct IcmpPing
 {
@@ -58,6 +35,26 @@ typedef struct IcmpPing
 
 /* Prototyping of functions and function blocks */
 _BUR_PUBLIC void IcmpPing(struct IcmpPing* inst);
+
+
+/* Constants */
+#ifdef _REPLACE_CONST
+ #define icmpERR_SYSTEM 32799U
+ #define icmpERR_FIREWALL 32754U
+ #define icmpERR_UNREACHABLE 32753U
+ #define icmpERR_SOCKET_CREATE 32752U
+ #define icmpERR_PARAMETER 32751U
+ #define icmpERR_NO_RESPONSE 32750U
+#else
+ _GLOBAL_CONST unsigned short icmpERR_SYSTEM;
+ _GLOBAL_CONST unsigned short icmpERR_FIREWALL;
+ _GLOBAL_CONST unsigned short icmpERR_UNREACHABLE;
+ _GLOBAL_CONST unsigned short icmpERR_SOCKET_CREATE;
+ _GLOBAL_CONST unsigned short icmpERR_PARAMETER;
+ _GLOBAL_CONST unsigned short icmpERR_NO_RESPONSE;
+#endif
+
+
 
 
 #ifdef __cplusplus

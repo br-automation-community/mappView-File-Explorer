@@ -1,0 +1,11 @@
+Version 4
+- Update widget to mappView 6.4
+
+Version 3
+- Update widget to mappView 6.3
+
+Version 2
+- Fixed upload same file twice does not work
+
+Version 1
+- First release

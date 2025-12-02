@@ -1,0 +1,677 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<EventBindingSet id="Explorer_eventbinding" xmlns="http://www.br-automation.com/iat2014/eventbinding/v2" xmlns:types="http://www.br-automation.com/iat2015/widgetTypes/v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Bindings>
+		<EventBinding id="eventbinding_0">
+			<Source xsi:type="clientSystem.Event" event="ContentLoaded" />
+			<EventHandler condition="contentId=&quot;contentInfoSample&quot;">
+				<Sequence>
+					<Step order="0">
+						<Action>
+							<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[0].refresh">
+								<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+							</Target>
+						</Action>
+					</Step>
+					<Step order="1">
+						<Action>
+							<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[1].refresh">
+								<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+							</Target>
+						</Action>
+					</Step>
+				</Sequence>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnCloseViewFile.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnCloseViewFile" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="widgets.brease.FlyOut.Action" contentRefId="contentExplorer" widgetRefId="flyViewFile">
+						<Method xsi:type="widgets.brease.FlyOut.Action.Close" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnNETconnect.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnNETconnect" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:NET.CMD.connect">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnNETreset.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnNETreset" event="Click" />
+			<EventHandler>
+				<Sequence>
+					<Step order="1">
+						<Action>
+							<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:NET.CMD.disconnect">
+								<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+							</Target>
+						</Action>
+					</Step>
+					<Step order="2">
+						<Action>
+							<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:NET.CMD.error_reset">
+								<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+							</Target>
+						</Action>
+					</Step>
+				</Sequence>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnUSBreset.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnUSBreset" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:USB.CMD.error_reset">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnViewFileA.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnViewFileA" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[0].view_file">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="EXPL.VIS[0].view_file">
+			<Source xsi:type="opcUa.Event" refId="::AsGlobalPV:EXPL.VIS[0].view_file" event="ValueChanged" />
+			<Operand datatype="ANY_STRING" name="ExplorerOpenFile">
+				<ReadTarget xsi:type="opcUa.NodeAction.Read" refId="::AsGlobalPV:EXPL.VIS[0].view_file_path">
+					<Method xsi:type="opcUa.NodeAction.GetValue" />
+				</ReadTarget>
+			</Operand>
+			<EventHandler condition="newValue">
+				<Sequence>
+					<Step order="1">
+						<Action>
+							<Target xsi:type="widgets.brease.WebViewer.Action" contentRefId="contentExplorer" widgetRefId="webViewFile">
+								<Method xsi:type="widgets.brease.WebViewer.Action.SetSrc" value="=ExplorerOpenFile" />
+							</Target>
+						</Action>
+					</Step>
+					<Step order="2">
+						<Action>
+							<Target xsi:type="widgets.brease.FlyOut.Action" contentRefId="contentExplorer" widgetRefId="flyViewFile">
+								<Method xsi:type="widgets.brease.FlyOut.Action.Open" />
+							</Target>
+						</Action>
+					</Step>
+					<Step order="3">
+						<Action>
+							<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.VIS[0].view_file">
+								<Method xsi:type="opcUa.NodeAction.SetValueBool" value="false" />
+							</Target>
+						</Action>
+					</Step>
+				</Sequence>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnClearFilterA.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnClearFilterA" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.PAR[0].item_filter">
+						<Method xsi:type="opcUa.NodeAction.SetValueString" value="" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.tblDirectoryA.Click">
+			<Source xsi:type="widgets.brease.Table.Event" contentRefId="contentExplorer" widgetRefId="tblDirectoryA" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.VIS[0].double_click_event">
+						<Method xsi:type="opcUa.NodeAction.AddValue" value="1" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.ddbDeviceA.SelectedIndexChanged">
+			<Source xsi:type="widgets.brease.DropDownBox.Event" contentRefId="contentExplorer" widgetRefId="ddbDeviceA" event="SelectedIndexChanged" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[0].refresh">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnRefreshA.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnRefreshA" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[0].refresh">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnDeleteA.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnDeleteA" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="clientSystem.Action">
+						<Method xsi:type="clientSystem.Action.ShowMessageBox" type="YesNo" message="Delete selected item?" header="Item Delete" icon="Question" />
+					</Target>
+					<Result>
+						<ResultHandler condition="result = 1">
+							<Action>
+								<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[0].delete">
+									<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+								</Target>
+							</Action>
+						</ResultHandler>
+					</Result>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnCopyA.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnCopyA" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[0].copy">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnCopyAllA.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnCopyAllA" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[0].copy_all">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnDirCreateA.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnDirCreateA" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[0].dir_create">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnExpRenameA.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnExpRenameA" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[0].rename">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnDownloadA.Click">
+			<Source xsi:type="widgets.brXtended.ButtonTransfer.Event" contentRefId="contentExplorer" widgetRefId="btnDownloadA" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[0].download">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnDownloadA.ValueChanged">
+			<Source xsi:type="opcUa.Event" refId="::AsGlobalPV:EXPL.VIS[0].download_execute" event="ValueChanged" />
+			<Operand datatype="ANY_STRING" name="full_path">
+				<ReadTarget xsi:type="opcUa.NodeAction.Read" refId="::AsGlobalPV:EXPL.VIS[0].file_full_path">
+					<Method xsi:type="opcUa.NodeAction.GetValue" />
+				</ReadTarget>
+			</Operand>
+			<EventHandler condition="newValue">
+				<Action>
+					<Target xsi:type="widgets.brXtended.ButtonTransfer.Action" contentRefId="contentExplorer" widgetRefId="btnDownloadA">
+						<Method xsi:type="widgets.brXtended.ButtonTransfer.Action.Download" filePath="=full_path" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnDownloadA.OnError">
+			<Source xsi:type="widgets.brXtended.ButtonTransfer.Event" contentRefId="contentExplorer" widgetRefId="btnDownloadA" event="OnError" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.VIS[0].file_status">
+						<Method xsi:type="opcUa.NodeAction.SetValueNumber" value="=response" />
+					</Target>
+				</Action>
+			</EventHandler>
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.VIS[0].download_execute">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="false" />
+					</Target>
+				</Action>
+			</EventHandler>
+			<EventHandler>
+				<Action>
+					<Target xsi:type="clientSystem.Action">
+						<Method xsi:type="clientSystem.Action.ShowMessageBox" type="OK" message="File download failed" header="Download file error" icon="Error" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnDownloadA.FileDownloaded">
+			<Source xsi:type="widgets.brXtended.ButtonTransfer.Event" contentRefId="contentExplorer" widgetRefId="btnDownloadA" event="FileDownloaded" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.VIS[0].download_execute">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="false" />
+					</Target>
+				</Action>
+			</EventHandler>
+			<EventHandler>
+				<Action>
+					<Target xsi:type="clientSystem.Action">
+						<Method xsi:type="clientSystem.Action.ShowMessageBox" type="OK" message="File downloaded successfully" header="Download complete" icon="Information" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnUploadA.Click">
+			<Source xsi:type="widgets.brXtended.ButtonTransfer.Event" contentRefId="contentExplorer" widgetRefId="btnUploadA" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[0].upload">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnUploadA.ValueChanged">
+			<Source xsi:type="opcUa.Event" refId="::AsGlobalPV:EXPL.VIS[0].upload_execute" event="ValueChanged" />
+			<Operand datatype="ANY_STRING" name="full_path">
+				<ReadTarget xsi:type="opcUa.NodeAction.Read" refId="::AsGlobalPV:EXPL.VIS[0].file_full_path">
+					<Method xsi:type="opcUa.NodeAction.GetValue" />
+				</ReadTarget>
+			</Operand>
+			<EventHandler condition="newValue">
+				<Action>
+					<Target xsi:type="widgets.brXtended.ButtonTransfer.Action" contentRefId="contentExplorer" widgetRefId="btnUploadA">
+						<Method xsi:type="widgets.brXtended.ButtonTransfer.Action.Upload" filePath="=full_path" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnUploadA.OnError">
+			<Source xsi:type="widgets.brXtended.ButtonTransfer.Event" contentRefId="contentExplorer" widgetRefId="btnUploadA" event="OnError" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.VIS[0].file_status">
+						<Method xsi:type="opcUa.NodeAction.SetValueNumber" value="=response" />
+					</Target>
+				</Action>
+			</EventHandler>
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.VIS[0].upload_execute">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="false" />
+					</Target>
+				</Action>
+			</EventHandler>
+			<EventHandler>
+				<Action>
+					<Target xsi:type="clientSystem.Action">
+						<Method xsi:type="clientSystem.Action.ShowMessageBox" type="OK" message="File upload failed" header="File upload error" icon="Error" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnUploadA.FileSaved">
+			<Source xsi:type="widgets.brXtended.ButtonTransfer.Event" contentRefId="contentExplorer" widgetRefId="btnUploadA" event="FileSaved" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.VIS[0].upload_execute">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="false" />
+					</Target>
+				</Action>
+			</EventHandler>
+			<EventHandler>
+				<Action>
+					<Target xsi:type="clientSystem.Action">
+						<Method xsi:type="clientSystem.Action.ShowMessageBox" type="OK" message="File uploaded successfully" header="Upload complete" icon="Information" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.OpenMessageBoxOverwriteA">
+			<Source xsi:type="opcUa.Event" refId="::AsGlobalPV:EXPL.VIS[0].overwrite_request" event="ValueChanged" />
+			<EventHandler condition="newValue">
+				<Action>
+					<Target xsi:type="clientSystem.Action">
+						<Method xsi:type="clientSystem.Action.ShowMessageBox" type="YesNo" message="Item already exists. Do you want to overwrite it?" header="Overwrite?" icon="Question" />
+					</Target>
+					<Result>
+						<ResultHandler condition="result = 1">
+							<Action>
+								<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.VIS[0].overwrite_response">
+									<Method xsi:type="opcUa.NodeAction.SetValueNumber" value="1" />
+								</Target>
+							</Action>
+						</ResultHandler>
+						<ResultHandler condition="result = 2">
+							<Action>
+								<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.VIS[0].overwrite_response">
+									<Method xsi:type="opcUa.NodeAction.SetValueNumber" value="2" />
+								</Target>
+							</Action>
+						</ResultHandler>
+					</Result>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnViewFileB.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnViewFileB" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[1].view_file">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="EXPL.VIS[1].view_file">
+			<Source xsi:type="opcUa.Event" refId="::AsGlobalPV:EXPL.VIS[1].view_file" event="ValueChanged" />
+			<Operand datatype="ANY_STRING" name="ExplorerOpenFile">
+				<ReadTarget xsi:type="opcUa.NodeAction.Read" refId="::AsGlobalPV:EXPL.VIS[1].view_file_path">
+					<Method xsi:type="opcUa.NodeAction.GetValue" />
+				</ReadTarget>
+			</Operand>
+			<EventHandler condition="newValue">
+				<Sequence>
+					<Step order="1">
+						<Action>
+							<Target xsi:type="widgets.brease.WebViewer.Action" contentRefId="contentExplorer" widgetRefId="webViewFile">
+								<Method xsi:type="widgets.brease.WebViewer.Action.SetSrc" value="=ExplorerOpenFile" />
+							</Target>
+						</Action>
+					</Step>
+					<Step order="2">
+						<Action>
+							<Target xsi:type="widgets.brease.FlyOut.Action" contentRefId="contentExplorer" widgetRefId="flyViewFile">
+								<Method xsi:type="widgets.brease.FlyOut.Action.Open" />
+							</Target>
+						</Action>
+					</Step>
+					<Step order="3">
+						<Action>
+							<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.VIS[1].view_file">
+								<Method xsi:type="opcUa.NodeAction.SetValueBool" value="false" />
+							</Target>
+						</Action>
+					</Step>
+				</Sequence>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnClearFilterB.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnClearFilterB" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.PAR[1].item_filter">
+						<Method xsi:type="opcUa.NodeAction.SetValueString" value="" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.tblDirectoryB.Click">
+			<Source xsi:type="widgets.brease.Table.Event" contentRefId="contentExplorer" widgetRefId="tblDirectoryB" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.VIS[1].double_click_event">
+						<Method xsi:type="opcUa.NodeAction.AddValue" value="1" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.ddbDeviceB.SelectedIndexChanged">
+			<Source xsi:type="widgets.brease.DropDownBox.Event" contentRefId="contentExplorer" widgetRefId="ddbDeviceB" event="SelectedIndexChanged" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[1].refresh">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnRefreshB.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnRefreshB" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[1].refresh">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnDeleteB.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnDeleteB" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="clientSystem.Action">
+						<Method xsi:type="clientSystem.Action.ShowMessageBox" type="YesNo" message="Delete selected item?" header="Item Delete" icon="Question" />
+					</Target>
+					<Result>
+						<ResultHandler condition="result = 1">
+							<Action>
+								<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[1].delete">
+									<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+								</Target>
+							</Action>
+						</ResultHandler>
+					</Result>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnCopyB.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnCopyB" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[1].copy">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnCopyAllB.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnCopyAllB" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[1].copy_all">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnDirCreateB.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnDirCreateB" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[1].dir_create">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnExpRenameB.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnExpRenameB" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[1].rename">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnDownloadB.Click">
+			<Source xsi:type="widgets.brXtended.ButtonTransfer.Event" contentRefId="contentExplorer" widgetRefId="btnDownloadB" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[1].download">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnDownloadB.ValueChanged">
+			<Source xsi:type="opcUa.Event" refId="::AsGlobalPV:EXPL.VIS[1].download_execute" event="ValueChanged" />
+			<Operand datatype="ANY_STRING" name="full_path">
+				<ReadTarget xsi:type="opcUa.NodeAction.Read" refId="::AsGlobalPV:EXPL.VIS[1].file_full_path">
+					<Method xsi:type="opcUa.NodeAction.GetValue" />
+				</ReadTarget>
+			</Operand>
+			<EventHandler condition="newValue">
+				<Action>
+					<Target xsi:type="widgets.brXtended.ButtonTransfer.Action" contentRefId="contentExplorer" widgetRefId="btnDownloadB">
+						<Method xsi:type="widgets.brXtended.ButtonTransfer.Action.Download" filePath="=full_path" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnDownloadB.OnError">
+			<Source xsi:type="widgets.brXtended.ButtonTransfer.Event" contentRefId="contentExplorer" widgetRefId="btnDownloadB" event="OnError" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.VIS[1].file_status">
+						<Method xsi:type="opcUa.NodeAction.SetValueNumber" value="=response" />
+					</Target>
+				</Action>
+			</EventHandler>
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.VIS[1].download_execute">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="false" />
+					</Target>
+				</Action>
+			</EventHandler>
+			<EventHandler>
+				<Action>
+					<Target xsi:type="clientSystem.Action">
+						<Method xsi:type="clientSystem.Action.ShowMessageBox" type="OK" message="File download failed" header="Download file error" icon="Error" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnDownloadB.FileDownloaded">
+			<Source xsi:type="widgets.brXtended.ButtonTransfer.Event" contentRefId="contentExplorer" widgetRefId="btnDownloadB" event="FileDownloaded" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.VIS[1].download_execute">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="false" />
+					</Target>
+				</Action>
+			</EventHandler>
+			<EventHandler>
+				<Action>
+					<Target xsi:type="clientSystem.Action">
+						<Method xsi:type="clientSystem.Action.ShowMessageBox" type="OK" message="File downloaded successfully" header="Download complete" icon="Information" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnUploadB.Click">
+			<Source xsi:type="widgets.brXtended.ButtonTransfer.Event" contentRefId="contentExplorer" widgetRefId="btnUploadB" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[1].upload">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnUploadB.ValueChanged">
+			<Source xsi:type="opcUa.Event" refId="::AsGlobalPV:EXPL.VIS[1].upload_execute" event="ValueChanged" />
+			<Operand datatype="ANY_STRING" name="full_path">
+				<ReadTarget xsi:type="opcUa.NodeAction.Read" refId="::AsGlobalPV:EXPL.VIS[1].file_full_path">
+					<Method xsi:type="opcUa.NodeAction.GetValue" />
+				</ReadTarget>
+			</Operand>
+			<EventHandler condition="newValue">
+				<Action>
+					<Target xsi:type="widgets.brXtended.ButtonTransfer.Action" contentRefId="contentExplorer" widgetRefId="btnUploadB">
+						<Method xsi:type="widgets.brXtended.ButtonTransfer.Action.Upload" filePath="=full_path" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnUploadB.OnError">
+			<Source xsi:type="widgets.brXtended.ButtonTransfer.Event" contentRefId="contentExplorer" widgetRefId="btnUploadB" event="OnError" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.VIS[1].file_status">
+						<Method xsi:type="opcUa.NodeAction.SetValueNumber" value="=response" />
+					</Target>
+				</Action>
+			</EventHandler>
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.VIS[1].upload_execute">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="false" />
+					</Target>
+				</Action>
+			</EventHandler>
+			<EventHandler>
+				<Action>
+					<Target xsi:type="clientSystem.Action">
+						<Method xsi:type="clientSystem.Action.ShowMessageBox" type="OK" message="File upload failed" header="File upload error" icon="Error" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnUploadB.FileSaved">
+			<Source xsi:type="widgets.brXtended.ButtonTransfer.Event" contentRefId="contentExplorer" widgetRefId="btnUploadB" event="FileSaved" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.VIS[1].upload_execute">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="false" />
+					</Target>
+				</Action>
+			</EventHandler>
+			<EventHandler>
+				<Action>
+					<Target xsi:type="clientSystem.Action">
+						<Method xsi:type="clientSystem.Action.ShowMessageBox" type="OK" message="File uploaded successfully" header="Upload complete" icon="Information" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>		
+		<EventBinding id="contentExplorer.OpenMessageBoxOverwriteB">
+			<Source xsi:type="opcUa.Event" refId="::AsGlobalPV:EXPL.VIS[1].overwrite_request" event="ValueChanged" />
+			<EventHandler condition="newValue">
+				<Action>
+					<Target xsi:type="clientSystem.Action">
+						<Method xsi:type="clientSystem.Action.ShowMessageBox" type="YesNo" message="Item already exists. Do you want to overwrite it?" header="Overwrite?" icon="Question" />
+					</Target>
+					<Result>
+						<ResultHandler condition="result = 1">
+							<Action>
+								<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.VIS[1].overwrite_response">
+									<Method xsi:type="opcUa.NodeAction.SetValueNumber" value="1" />
+								</Target>
+							</Action>
+						</ResultHandler>
+						<ResultHandler condition="result = 2">
+							<Action>
+								<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.VIS[1].overwrite_response">
+									<Method xsi:type="opcUa.NodeAction.SetValueNumber" value="2" />
+								</Target>
+							</Action>
+						</ResultHandler>
+					</Result>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+	</Bindings>
+</EventBindingSet>

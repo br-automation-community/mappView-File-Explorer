@@ -36,7 +36,7 @@ END_FUNCTION
 
 {REDUND_ERROR} FUNCTION CreateError : expSTATE (*TODO: Add your comment here*) (*$GROUP=User,$CAT=User,$GROUPICON=User.png,$CATICON=User.png*)
 	VAR_INPUT
-		nr : UINT;
+		nr : DINT;
 		side : BOOL;
 		step : expSTATE;
 		text : STRING[150];
