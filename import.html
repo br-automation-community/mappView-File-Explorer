@@ -308,26 +308,26 @@
 <p><img alt="" src="images/import_0.png" /></p>
 <p>Start Automation Studio and open the demo project. Start a second instance of Automation Studio and open your exiting project so that you have both project open side by side. Go to the logical view in both projects.</p>
 <ol>
-<li>Copy the packages mappFileExplorer, USBdevice and NETdevice from the demo project</li>
+<li>Copy the packages <code>mappFileExplorer, USBdevice and NETdevice</code> from the demo project</li>
 <li>Paste the packages into the existing project at the top</li>
 <li>Assign the new task to the CPU</li>
-<li>Make sure that the B&amp;R libraries MpFile, MpBase, MpServer, AsZip, ArBrStr, AsUSB, standard, SysLib and FileIO are in the existing project, add the libraries if needed.</li>
+<li>Make sure that the B&amp;R libraries <code>MpFile, MpBase, MpServer, AsZip, ArBrStr, AsUSB, standard, SysLib and FileIO</code> are in the existing project, add the libraries if needed.</li>
 </ol>
 <p><img alt="" src="images/import_1.png" /></p>
 <ol>
-<li>Open the mappView tree in the demo project and navigate to ExplorerPage, right click and copy it</li>
+<li>Open the mappView tree in the demo project and navigate to <code>ExplorerPage</code>, right click and copy it</li>
 <li>In the existing project paste the page onto pages</li>
 <li>Assign the new task to the CPU</li>
 </ol>
 <p><img alt="" src="images/import_2.png" /></p>
 <ol>
-<li>Expand the new page and double click on “ExplorerPage.page”</li>
+<li>Expand the new page and double click on <code>ExplorerPage.page</code></li>
 <li>Select the default layout for the existing project the properties window</li>
 </ol>
 <p><img alt="" src="images/import_3.png" /></p>
 <ol>
 <li>Once the default layout is set in the existing project click each section and make sure that correct content is selected</li>
-<li>Select contentExplorer for the main section</li>
+<li>Select <code>contentExplorer</code> for the main section</li>
 <li>Save the project</li>
 </ol>
 <p><img alt="" src="images/import_4.png" /></p>
@@ -337,48 +337,48 @@
 <p><img alt="" src="images/import_5.png" /></p>
 <ol>
 <li>Open the configuration view in the existing project and open the OPC configuration</li>
-<li>Select the global variables EXPL, NET and USB. if the variable does not show up, save and compile the project, then reopen the window</li>
+<li>Select the global variables <code>EXPL, NET and USB</code>. if the variable does not show up, save and compile the project, then reopen the window</li>
 <li>Enable the variables with green checkmark</li>
-<li>Set “Automatic Enable” to true in the properties window</li>
+<li>Set <code>Automatic Enable</code> to true in the properties window</li>
 </ol>
 <p><img alt="" src="images/import_6.png" /></p>
 <ol>
-<li>Select the elements CMD, PAR, DAT and VIS</li>
-<li>Set “Show array elements” in the properties to true</li>
+<li>Select the elements <code>CMD, PAR, DAT and VIS</code></li>
+<li>Set <code>Show array elements</code> in the properties to true</li>
 </ol>
 <p><img alt="" src="images/import_7.png" /></p>
 <ol>
-<li>Select the elements device_list in the sub structure EXPL.VIS[0] and EXPL.VIS[1]</li>
+<li>Select the elements device_list in the sub structure <code>EXPL.VIS[0] and EXPL.VIS[1]</code></li>
 <li>Set “Show array elements” in the properties to true</li>
 </ol>
 <p><img alt="" src="images/import_8.png" /></p>
 <ol>
-<li>Select the element USB.PAR.is_connected</li>
-<li>Set “Show array elements” in the properties to true</li>
+<li>Select the element <code>USB.PAR.is_connected</code></li>
+<li>Set <code>Show array elements</code> in the properties to true</li>
 </ol>
 <p><img alt="" src="images/import_9.png" /></p>
 <ol>
-<li>Expand the section mappView in the existing project and select “Explorer.binding” and “Explorer.eventbinding”</li>
+<li>Expand the section mappView in the existing project and select <code>Explorer.binding and Explorer.eventbinding</code></li>
 <li>Copy the two files</li>
 <li>Paste the two files in the existing project under mappView</li>
 </ol>
 <p><img alt="" src="images/import_10.png" /></p>
 <ol>
-<li>In the existing project open the file “Visualizat.vis”</li>
-<li>Add the ExplorerPage in the section pages</li>
-<li>Add the Explorer_binding in the section binding sets</li>
-<li>Add the Explorer_eventbinding in the section EventBindingSets</li>
+<li>In the existing project open the file <code>Visualizat.vis</code></li>
+<li>Add the <code>ExplorerPage</code> in the section pages</li>
+<li>Add the <code>Explorer_binding</code> in the section binding sets</li>
+<li>Add the <code>Explorer_eventbinding</code> in the section EventBindingSets</li>
 </ol>
 <p><img alt="" src="images/import_11.png" /></p>
 <ol>
 <li>In the existing project open the Physical View, Right click on the CPU and open the configuration</li>
 <li>Navigate to files devices</li>
-<li>Adjust the device information. The USER_PATH is located on the 4. partition of the memory card. The size of the user partition can be configured under "Module system on target".</li>
+<li>Adjust the device information. The <code>USER_PATH</code> is located on the 4. partition of the memory card. The size of the user partition can be configured under <code>Module system on target</code>.</li>
 </ol>
 <p><img alt="" src="images/import_12.png" /></p>
 <ol>
-<li>In the existing project open the Configuration View, click on the mappServices</li>
-<li>Add a new mappService of type MpFileManager</li>
+<li>In the existing project open the Configuration View, click on the <code>mappServices</code></li>
+<li>Add a new mappService of type <code>MpFileManager</code></li>
 <li>Enter the device name from the previous step</li>
 <li>Add user roles and permissions as needed</li>
 </ol>
