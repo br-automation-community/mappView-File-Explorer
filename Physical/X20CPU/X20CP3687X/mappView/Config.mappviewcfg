@@ -8,7 +8,10 @@
       </Selector>
       <Property ID="MaxClientConnections" Value="2" />
       <Property ID="MpUserXUserPreferences" Value="FALSE" />
-      <Selector ID="StartupUser" Value="StartupUserAnonymousToken" />
+      <Selector ID="StartupUser" Value="StartupUserDefaultUser">
+        <Property ID="StartupUserDefaultUserName" Value="Anonymous" />
+        <Property ID="MVEncryptedPassword" Value="BCsGN+GrcT9aYfyMdYDJlQ==" />
+      </Selector>
       <Group ID="TcpProxyConf">
         <Selector ID="InsecureMode" Value="1" />
       </Group>
