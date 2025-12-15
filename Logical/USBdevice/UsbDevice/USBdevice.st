@@ -12,16 +12,16 @@ PROGRAM _CYCLIC
 			node := 1;
 			USB.status := ERR_OK;
 			IF USB.CMD.auto_scan = TRUE THEN
-				TON_10ms_01(IN:=1, PT:=USB.PAR.refresh_interval);
+				TON_10ms_01(IN:=TRUE, PT:=USB.PAR.refresh_interval);
 				// Get new USB data
 				IF(TON_10ms_01.Q) THEN
-					TON_10ms_01(IN:=0);
+					TON_10ms_01(IN:=FALSE);
 					USB.status := ERR_FUB_BUSY;
 					brsmemset(ADR(usb_data), 0, SIZEOF(usb_data));
 					state_machine := USB_CREATE_NODE_ID_LIST;
 				END_IF
 			ELSE
-				TON_10ms_01(IN:=0);
+				TON_10ms_01(IN:=FALSE);
 			END_IF
 			// Refresh USB data every X seconds when enabled
 			IF USB.CMD.error_reset = TRUE THEN
@@ -31,7 +31,7 @@ PROGRAM _CYCLIC
 			// Get USB device list
 			// -----------------------------------------------------------------------------------------------------------
 		USB_CREATE_NODE_ID_LIST:  
-			UsbNodeListGet_0.enable := 1;
+			UsbNodeListGet_0.enable := TRUE;
 			UsbNodeListGet_0.pBuffer := ADR(node_id_buffer);  
 			UsbNodeListGet_0.bufferSize := SIZEOF(node_id_buffer);  
 			UsbNodeListGet_0.filterInterfaceClass := asusb_CLASS_MASS_STORAGE;  
@@ -69,7 +69,7 @@ PROGRAM _CYCLIC
 			// Get device information
 			// -----------------------------------------------------------------------------------------------------------	
 		USB_READ_DEVICE_DATA:  				
-			UsbNodeGet_0.enable := 1;
+			UsbNodeGet_0.enable := TRUE;
 			UsbNodeGet_0.nodeId := node_id_buffer[node];  
 			UsbNodeGet_0.pBuffer := ADR(usb_data[node]);  
 			UsbNodeGet_0.bufferSize := SIZEOF (usb_data[node]);  
@@ -180,7 +180,7 @@ PROGRAM _CYCLIC
 			brsitoa(idx, ADR(tmpSTR));
 			brsstrcat(ADR(device_name), ADR(tmpSTR));
 			// Link device
-			DevLink_0.enable := 1;
+			DevLink_0.enable := TRUE;
 			DevLink_0.pDevice := ADR(device_name);  
 			DevLink_0.pParam := ADR(device_param);  
 			DevLink_0;
@@ -205,7 +205,7 @@ PROGRAM _CYCLIC
 			// UnLink device
 			// -----------------------------------------------------------------------------------------------------------				
 		USB_UNLINK_DEVICE:
-			DevUnlink_0.enable := 1;
+			DevUnlink_0.enable := TRUE;
 			DevUnlink_0.handle := link_handle[node];  
 			DevUnlink_0;
 	
@@ -249,7 +249,7 @@ PROGRAM _CYCLIC
 			
 			// Unlink device
 			IF(USB.ERR.state = USB_LINK_DEVICE) THEN
-				DevUnlink_0.enable := 1;
+				DevUnlink_0.enable := TRUE;
 				DevUnlink_0.handle := DevLink_0.handle;  
 				DevUnlink_0;
 			END_IF
@@ -267,7 +267,7 @@ END_PROGRAM
 PROGRAM _EXIT
 	FOR idx:=1 TO USB_MAX_CNT DO
 		REPEAT
-			DevUnlink_0.enable := 1;
+			DevUnlink_0.enable := TRUE;
 			DevUnlink_0.handle := link_handle[idx];;  
 			DevUnlink_0;
 			UNTIL DevUnlink_0.status <> ERR_FUB_BUSY

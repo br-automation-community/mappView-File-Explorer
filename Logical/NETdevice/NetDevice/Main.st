@@ -10,10 +10,10 @@ PROGRAM _CYCLIC
 	IF((NET.PAR.server_ip <> '' OR NET.PAR.server_name <> '') AND PingTimer.Q) THEN
 		// Use IPÜ address
 		IF(NET.PAR.server_ip <> '') THEN
-			IcmpPing_0(enable := 1, pHost := ADR(NET.PAR.server_ip), timeout := PING_TIMEOUT);
+			IcmpPing_0(enable := TRUE, pHost := ADR(NET.PAR.server_ip), timeout := PING_TIMEOUT);
 		// Use host name		
 		ELSE
-			IcmpPing_0(enable := 1, pHost := ADR(NET.PAR.server_name), timeout := PING_TIMEOUT);
+			IcmpPing_0(enable := TRUE, pHost := ADR(NET.PAR.server_name), timeout := PING_TIMEOUT);
 		END_IF
 		// Ping was OK
 		IF(IcmpPing_0.status = ERR_OK) THEN
@@ -52,7 +52,7 @@ PROGRAM _CYCLIC
 			// --------------------------------------------------------------------------------------------------------------------	
 			// Disconnect from server
 			IF(NET.CMD.disconnect) THEN
-				DevUnlink_0.enable := 0;
+				DevUnlink_0.enable := FALSE;
 				DevUnlink_0;
 				state_machine := NET_UNLINK_DEVICE;
 			END_IF
@@ -111,7 +111,7 @@ PROGRAM _CYCLIC
 			END_IF
 
 			// Link device
-			DevLink_0.enable := 1;
+			DevLink_0.enable := TRUE;
 			DevLink_0.pDevice := ADR('NET_DEVICE');  
 			DevLink_0.pParam := ADR(device_param);  
 			DevLink_0;
@@ -144,7 +144,7 @@ PROGRAM _CYCLIC
 		// -----------------------------------------------------------------------------------------------------------				
 		NET_UNLINK_DEVICE:
 			NET.PAR.enable_connect := FALSE;
-			DevUnlink_0.enable := 1;
+			DevUnlink_0.enable := TRUE;
 			DevUnlink_0.handle := DevLink_0.handle;  
 			DevUnlink_0;
 	
@@ -200,7 +200,7 @@ END_PROGRAM
 
 PROGRAM _EXIT
 	REPEAT
-		DevUnlink_0.enable := 1;
+		DevUnlink_0.enable := TRUE;
 		DevUnlink_0.handle := DevLink_0.handle;  
 		DevUnlink_0;
 		UNTIL DevUnlink_0.status <> ERR_FUB_BUSY
