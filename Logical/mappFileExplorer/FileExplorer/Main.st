@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------------------
-//	Function:	mappView explorer
+//	Function: mappView explorer
 // ----------------------------------------------------------------------------------------
 
 PROGRAM _INIT
@@ -819,10 +819,13 @@ PROGRAM _CYCLIC
 					EXPL.CMD[side].refresh := 1;
 
 					step := EXP_WAIT;
-					// Error access rights 
+				// Error file size
+				ELSIF (EXPL.VIS[side].file_status = 10101) THEN
+					step := CreateError(EXPL.VIS[side].file_status, side, step, 'maximum file size exceeded', ADR(EXPL));
+				// Error access rights 
 				ELSIF (EXPL.VIS[side].file_status = -1064165358) THEN
 					step := CreateError(EXPL.VIS[side].file_status, side, step, 'user  has insufficient rights to access file or device', ADR(EXPL));
-					// Error
+				// Error
 				ELSE
 					step := CreateError(EXPL.VIS[side].file_status, side, step, 'error uploading file', ADR(EXPL));
 				END_IF
