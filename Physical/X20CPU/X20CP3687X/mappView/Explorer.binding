@@ -79,6 +79,10 @@
 		</Binding>
 		<Binding mode="oneWay">
 			<Source xsi:type="opcUa" refId="::AsGlobalPV:EXPL.VIS[0].enable_button_set_1" attribute="value" />
+			<Target xsi:type="brease" contentRefId="contentExplorer" widgetRefId="btnDuplicateA" attribute="enable" />
+		</Binding>
+		<Binding mode="oneWay">
+			<Source xsi:type="opcUa" refId="::AsGlobalPV:EXPL.VIS[0].enable_button_set_1" attribute="value" />
 			<Target xsi:type="brease" contentRefId="contentExplorer" widgetRefId="btnCopyAllA" attribute="enable" />
 		</Binding>
 		<Binding mode="oneWay">
@@ -92,6 +96,10 @@
 		<Binding mode="oneWay">
 			<Source xsi:type="opcUa" refId="::AsGlobalPV:EXPL.VIS[1].enable_button_set_1" attribute="value" />
 			<Target xsi:type="brease" contentRefId="contentExplorer" widgetRefId="btnDeleteB" attribute="enable" />
+		</Binding>
+		<Binding mode="oneWay">
+			<Source xsi:type="opcUa" refId="::AsGlobalPV:EXPL.VIS[1].enable_button_set_1" attribute="value" />
+			<Target xsi:type="brease" contentRefId="contentExplorer" widgetRefId="btnDuplicateB" attribute="enable" />
 		</Binding>
 		<Binding mode="twoWay">
 			<Source xsi:type="opcUa" refId="::AsGlobalPV:EXPL.PAR[1].item_filter" attribute="value" />

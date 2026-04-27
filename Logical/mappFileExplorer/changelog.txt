@@ -1,3 +1,7 @@
+27.04.2026
+- Added duplicate file command with automatic "_index" naming when new_name is empty
+- Duplicate now increments index until a free file name is found
+
 07.01.2026
 - Better error message when upload file size exceeds maximum
 

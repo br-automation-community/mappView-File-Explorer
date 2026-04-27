@@ -175,6 +175,16 @@
 				</Action>
 			</EventHandler>
 		</EventBinding>
+		<EventBinding id="contentExplorer.btnDuplicateA.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnDuplicateA" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[0].duplicate">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
+				</Action>
+			</EventHandler>
+		</EventBinding>
 		<EventBinding id="contentExplorer.btnCopyA.Click">
 			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnCopyA" event="Click" />
 			<EventHandler>
@@ -472,6 +482,16 @@
 							</Action>
 						</ResultHandler>
 					</Result>
+				</Action>
+			</EventHandler>
+		</EventBinding>
+		<EventBinding id="contentExplorer.btnDuplicateB.Click">
+			<Source xsi:type="widgets.brease.Button.Event" contentRefId="contentExplorer" widgetRefId="btnDuplicateB" event="Click" />
+			<EventHandler>
+				<Action>
+					<Target xsi:type="opcUa.NodeAction" refId="::AsGlobalPV:EXPL.CMD[1].duplicate">
+						<Method xsi:type="opcUa.NodeAction.SetValueBool" value="true" />
+					</Target>
 				</Action>
 			</EventHandler>
 		</EventBinding>

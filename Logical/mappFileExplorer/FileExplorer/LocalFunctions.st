@@ -29,7 +29,7 @@ FUNCTION CreateError
 	ELSIF (nr = fiERR_DIR_ALREADY_EXIST) THEN
 		EXPL.ERR.text := 'directory or file already exists';
 	ELSIF (nr = fiERR_EXIST) THEN
-		EXPL.ERR.text := 'error uploading file already exists';
+		EXPL.ERR.text := 'directory or file already exists';
 	ELSE 
 		EXPL.ERR.text := text;
 	END_IF	

@@ -21,6 +21,7 @@ TYPE
 		EXP_FILE_COPY,
 		EXP_FILE_DELETE,
 		EXP_FILE_RENAME,
+		EXP_FILE_DUPLICATE,
 		EXP_FILE_VIEW,
 		EXP_FILE_DOWNLOAD,
 		EXP_FILE_DOWNLOAD_1,
@@ -47,6 +48,7 @@ TYPE
 		view_file : BOOL; (*View selected file in mappView*)
 		delete : BOOL; (*Delete selected file *)
 		rename : BOOL; (*Rename selected file*)
+		duplicate : BOOL; (*Duplicate selected file*)
 		download : BOOL; (*Download selected file*)
 		upload : BOOL; (*Upload file to target*)
 	END_STRUCT;

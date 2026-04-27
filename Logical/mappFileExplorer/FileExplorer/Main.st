@@ -93,7 +93,7 @@ PROGRAM _CYCLIC
 
 	// ------------------------------------------------------------------------------------------------
 	// Stop here if no command is set
-	IF (EXPL.CMD[side].refresh = FALSE AND EXPL.CMD[side].dir_change = FALSE AND EXPL.CMD[side].dir_create = FALSE AND EXPL.CMD[side].copy = FALSE AND EXPL.CMD[side].copy_all = FALSE AND EXPL.CMD[side].delete = FALSE AND EXPL.CMD[side].rename = FALSE AND EXPL.CMD[side].view_file = FALSE AND EXPL.CMD[side].download = FALSE AND EXPL.CMD[side].upload = FALSE) THEN
+	IF (EXPL.CMD[side].refresh = FALSE AND EXPL.CMD[side].dir_change = FALSE AND EXPL.CMD[side].dir_create = FALSE AND EXPL.CMD[side].copy = FALSE AND EXPL.CMD[side].copy_all = FALSE AND EXPL.CMD[side].delete = FALSE AND EXPL.CMD[side].rename = FALSE AND EXPL.CMD[side].duplicate = FALSE AND EXPL.CMD[side].view_file = FALSE AND EXPL.CMD[side].download = FALSE AND EXPL.CMD[side].upload = FALSE) THEN
 		// --------------------------------------------------------------------------------------------
 		// Show current state
 		EXPL.status_text := 'Waiting...';
@@ -258,6 +258,23 @@ PROGRAM _CYCLIC
 					// Rename a file
 				ELSE
 					step := EXP_FILE_RENAME;
+				END_IF
+			END_IF
+			// ----------------------------------------------------------------------------------------
+			// Duplicate selected file
+			IF (EXPL.CMD[side].duplicate = TRUE) THEN
+				// Make sure that a valid file was selected
+				IF (EXPL.DAT[side].item_list[EXPL.VIS[side].item_selected] = '' OR EXPL.DAT[side].item_list[EXPL.VIS[side].item_selected] = '..') THEN
+					step := CreateError(ERR_INVALID_ITEM_NAME, side, step, 'this is not a valid item name', ADR(EXPL));
+				ELSIF (brsmemcmp(ADR(EXPL.DAT[side].item_list[EXPL.VIS[side].item_selected]), ADR('(DIR)'), 5) = 0) THEN
+					step := CreateError(ERR_INVALID_ITEM_NAME, side, step, 'duplicate is only supported for files', ADR(EXPL));
+					// Check if custom target name fits into path string
+				ELSIF (EXPL.PAR[side].new_name <> '' AND brsstrlen(ADR(EXPL.PAR[side].new_name)) + brsstrlen(ADR(EXPL.PAR[side].dir_path)) + 1 >= EXPL_DIR_PATH_LENGTH) THEN
+					step := CreateError(ERR_PATH_EXCEEDS_MAX, side, step, 'duplicate file path exceeds maximum length', ADR(EXPL));
+				ELSE
+					item_name := EXPL.DAT[side].item_list[EXPL.VIS[side].item_selected];
+					duplicate_index := 0;
+					step := EXP_FILE_DUPLICATE;
 				END_IF
 			END_IF
 			
@@ -700,6 +717,87 @@ PROGRAM _CYCLIC
 				// Error
 			ELSIF (FRename.status <> ERR_FUB_BUSY) THEN
 				step := CreateError(FRename.status, side, step, 'error renaming file', ADR(EXPL));
+			END_IF
+			//**********************************************************************************************
+			// Duplicate selected file
+			//**********************************************************************************************
+		EXP_FILE_DUPLICATE:
+			// Show current state
+			animation := WorkingStatus(ADR(EXPL), ADR('duplicating file...'), animation);
+
+			// Build automatic name "<name>_<index>.<ext>" when no custom name is given
+			IF (EXPL.PAR[side].new_name = '') THEN
+				IF (duplicate_index = 0) THEN
+					duplicate_index := 1;
+					brsmemset(ADR(duplicate_base_name), 0, SIZEOF(duplicate_base_name));
+					brsmemset(ADR(duplicate_extension), 0, SIZEOF(duplicate_extension));
+					brsmemset(ADR(duplicate_suffix_text), 0, SIZEOF(duplicate_suffix_text));
+					duplicate_dot_pos := FindInMem(ADR(item_name), brsstrlen(ADR(item_name)), ADR('.'), 1, TRUE);
+					IF (duplicate_dot_pos > 0) THEN
+						brsmemcpy(ADR(duplicate_base_name), ADR(item_name), DINT_TO_UDINT(duplicate_dot_pos));
+						brsstrcpy(ADR(duplicate_extension), ADR(item_name) + DINT_TO_UDINT(duplicate_dot_pos));
+					ELSE
+						brsstrcpy(ADR(duplicate_base_name), ADR(item_name));
+					END_IF
+
+					// If base name ends with _<number>, continue counting from that number.
+					duplicate_suffix_pos := FindInMem(ADR(duplicate_base_name), brsstrlen(ADR(duplicate_base_name)), ADR('_'), 1, TRUE);
+					IF (duplicate_suffix_pos > 0 AND duplicate_suffix_pos < DINT_TO_UDINT(brsstrlen(ADR(duplicate_base_name))) - 1) THEN
+						brsstrcpy(ADR(duplicate_suffix_text), ADR(duplicate_base_name) + DINT_TO_UDINT(duplicate_suffix_pos + 1));
+						duplicate_suffix_valid := TRUE;
+						FOR lx := 0 TO brsstrlen(ADR(duplicate_suffix_text)) - 1 DO
+							IF (brsmemcmp(ADR(duplicate_suffix_text) + lx, ADR('0'), 1) < 0 OR brsmemcmp(ADR(duplicate_suffix_text) + lx, ADR('9'), 1) > 0) THEN
+								duplicate_suffix_valid := FALSE;
+								EXIT;
+							END_IF
+						END_FOR
+
+						IF (duplicate_suffix_valid) THEN
+							duplicate_index := DINT_TO_UDINT(brsatoi(ADR(duplicate_suffix_text)) + 1);
+							brsmemset(ADR(duplicate_base_name) + DINT_TO_UDINT(duplicate_suffix_pos), 0, 1);
+						END_IF
+					END_IF
+				END_IF
+
+				brsmemset(ADR(tmp_str2), 0, SIZEOF(tmp_str2));
+				brsmemset(ADR(tmp_str4), 0, SIZEOF(tmp_str4));
+				brsstrcpy(ADR(tmp_str4), ADR(duplicate_base_name));
+				brsstrcat(ADR(tmp_str4), ADR('_'));
+				brsitoa(UDINT_TO_DINT(duplicate_index), ADR(tmp_str2));
+				brsstrcat(ADR(tmp_str4), ADR(tmp_str2));
+				brsstrcat(ADR(tmp_str4), ADR(duplicate_extension));
+			ELSE
+				brsstrcpy(ADR(tmp_str4), ADR(EXPL.PAR[side].new_name));
+			END_IF
+
+			// Verify final name and path length before calling FileCopy
+			IF (brsstrlen(ADR(tmp_str4)) = 0) THEN
+				step := CreateError(ERR_EMPTY_ITEM, side, step, 'duplicate target name is empty', ADR(EXPL));
+			ELSIF (brsstrlen(ADR(tmp_str4)) >= EXPL_ITEM_LENGTH) THEN
+				step := CreateError(ERR_NAME_EXCEEDS_MAX, side, step, 'duplicate file name exceeds maximum length', ADR(EXPL));
+			ELSIF (brsstrlen(ADR(tmp_str4)) + brsstrlen(ADR(EXPL.PAR[side].dir_path)) + 1 >= EXPL_DIR_PATH_LENGTH) THEN
+				step := CreateError(ERR_PATH_EXCEEDS_MAX, side, step, 'duplicate file path exceeds maximum length', ADR(EXPL));
+			ELSE
+				CreateCompletePath(EXPL.PAR[side].dir_path, item_name, ADR(tmp_str2));
+				CreateCompletePath(EXPL.PAR[side].dir_path, tmp_str4, ADR(tmp_str3));
+
+				FCopy.enable 	:= TRUE;
+				FCopy.pSrcDev	:= ADR(EXPL.PAR[side].device_active);
+				FCopy.pSrc		:= ADR(tmp_str2);
+				FCopy.pDestDev := ADR(EXPL.PAR[side].device_active);
+				FCopy.pDest		:= ADR(tmp_str3);
+				FCopy.option 	:= 0;
+				FCopy();
+
+				IF (FCopy.status = OK) THEN
+					EXPL.CMD[side].duplicate := FALSE;
+					EXPL.CMD[side].refresh := TRUE;
+					step := EXP_WAIT;
+				ELSIF (FCopy.status = fiERR_EXIST AND EXPL.PAR[side].new_name = '') THEN
+					duplicate_index := duplicate_index + 1;
+				ELSIF (FCopy.status <> ERR_FUB_BUSY) THEN
+					step := CreateError(FCopy.status, side, step, 'error duplicating file', ADR(EXPL));
+				END_IF
 			END_IF
 			//**********************************************************************************************
 			// View selected file

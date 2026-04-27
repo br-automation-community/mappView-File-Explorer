@@ -24,6 +24,13 @@ VAR
 	dir_path : STRING[EXPL_DIR_PATH_LENGTH];
 	device_active : STRING[40];
 	item_name : STRING[EXPL_DIR_PATH_LENGTH];
+	duplicate_index : UDINT;
+	duplicate_dot_pos : DINT;
+	duplicate_suffix_pos : DINT;
+	duplicate_suffix_valid : BOOL;
+	duplicate_base_name : STRING[EXPL_ITEM_LENGTH];
+	duplicate_extension : STRING[EXPL_ITEM_LENGTH];
+	duplicate_suffix_text : STRING[EXPL_ITEM_LENGTH];
 END_VAR
 (*Local function calls*)
 VAR
