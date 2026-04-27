@@ -246,12 +246,18 @@ PROGRAM _CYCLIC
 			// Rename file or directory
 			IF (EXPL.CMD[side].rename = TRUE) THEN
 				// ------------------------------------------------------------------------------------
-				// Check if new directory name is empty
+				// Check if new name is empty
 				IF (EXPL.PAR[side].new_name = '') THEN
 					step := CreateError(ERR_EMPTY_ITEM, side, step, 'new name is empty', ADR(EXPL));
 					// Make sure that a valid item was selected
 				ELSIF (EXPL.DAT[side].item_list[EXPL.VIS[side].item_selected] = '..') THEN
 					step := CreateError(ERR_INVALID_ITEM_NAME, side, step, 'this is not a valid item name', ADR(EXPL));
+					// Check if new directory name exceeds maximum length
+				ELSIF((brsmemcmp(ADR(EXPL.DAT[side].item_list[EXPL.VIS[side].item_selected]), ADR('(DIR)'), 5) = 0) AND (brsstrlen(ADR(EXPL.PAR[side].new_name)) + 5 >= EXPL_ITEM_LENGTH)) THEN
+					step := CreateError(ERR_DIR_EXCEEDS_MAX, side, step, 'directory name exceeds maximum length', ADR(EXPL));
+					// Check if new file name exceeds maximum length
+				ELSIF (brsstrlen(ADR(EXPL.PAR[side].new_name)) >= EXPL_ITEM_LENGTH) THEN
+					step := CreateError(ERR_NAME_EXCEEDS_MAX, side, step, 'file name exceeds maximum length', ADR(EXPL));
 					// Rename a directory
 				ELSIF(brsmemcmp(ADR(EXPL.DAT[side].item_list[EXPL.VIS[side].item_selected]), ADR('(DIR)'), 5) = 0)	THEN
 					step := EXP_DIR_RENAME;
@@ -908,7 +914,7 @@ PROGRAM _CYCLIC
 			// Upload file
 			//**********************************************************************************************
 		EXP_FILE_UPLOAD_1:		
-			IF EDGENEG(EXPL.VIS[side].upload_execute) THEN
+			IF (EXPL.VIS[side].upload_execute = FALSE) THEN
 				EXPL.CMD[side].upload := FALSE;
 				
 				// ----------------------------------------------------------------------------------------
@@ -917,6 +923,9 @@ PROGRAM _CYCLIC
 					EXPL.CMD[side].refresh := 1;
 
 					step := EXP_WAIT;
+				// Error file name length
+				ELSIF (EXPL.VIS[side].file_status = 10103) THEN
+					step := CreateError(EXPL.VIS[side].file_status, side, step, 'file name exceeds maximum length', ADR(EXPL));
 				// Error file size
 				ELSIF (EXPL.VIS[side].file_status = 10101) THEN
 					step := CreateError(EXPL.VIS[side].file_status, side, step, 'maximum file size exceeded', ADR(EXPL));

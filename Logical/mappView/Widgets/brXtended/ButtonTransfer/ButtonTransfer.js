@@ -34,18 +34,30 @@ define([
      * Maximum size of the transferred file
      */
 
+    /**
+    * @cfg {Integer} maxItemNameLength=50
+    * @iatStudioExposed
+    * @bindable
+    * @iatCategory Extended
+    * Maximum length of the transferred file name
+    */
+
     // Local constants and limits
     const _minFileSize = 1000;
     const _maxFileSize = 10000000;
+    const _minItemNameLength = 1;
+    const _maxItemNameLength = 255;
     const keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 
     // Widget error numbers
     const err_unkown = 10100;
     const err_file_size = 10101;
     const err_par_size = 10102;
+    const err_name_exceeds_max = 10103;
 
     var defaultSettings = {
-        maxFileSize : 1000000
+        maxFileSize : 1000000,
+        maxItemNameLength : 50
         },
 
         WidgetClass = widgets.brease.Button.extend(function ButtonTransfer() {
@@ -61,6 +73,10 @@ define([
 
         if (this.settings.maxFileSize < _minFileSize) {
             this.settings.maxFileSize = _minFileSize;
+        }
+
+        if (this.settings.maxItemNameLength < _minItemNameLength) {
+            this.settings.maxItemNameLength = _minItemNameLength;
         }
 
         // Create the the transfer element and append it invisibly.
@@ -117,6 +133,33 @@ define([
         return this.settings.maxFileSize;
     };
 
+    /**
+    * @method setMaxItemNameLength
+    * @iatStudioExposed
+    * Sets maxItemNameLength
+    * @param {Integer} maxItemNameLength The maximum length of the value
+    */
+    p.setMaxItemNameLength = function (newMaxItemNameLength) {
+        const widget = this;
+
+        if (newMaxItemNameLength <= _maxItemNameLength && newMaxItemNameLength >= _minItemNameLength){
+            this.settings.maxItemNameLength = newMaxItemNameLength;
+        }
+        else{
+            widget._errorHandling(err_par_size);
+        }
+    };
+
+    /**
+    * @method getMaxItemNameLength
+    * @iatStudioExposed
+    * Returns maxItemNameLength.
+    * @return {Integer} The maximum length of the value
+    */
+    p.getMaxItemNameLength = function () {
+        return this.settings.maxItemNameLength;
+    };
+
      /**
      * @method Download
      * @iatStudioExposed
@@ -151,6 +194,17 @@ define([
         // getting a hold of the file reference
         const file = event.target.files[0];
         widget.form.value = null;
+
+        // Ignore canceled file dialog.
+        if (file === undefined) {
+            return;
+        }
+
+        // Prevent creating files that exceed the PLC item-name limit.
+        if (file.name.length >= widget.settings.maxItemNameLength) {
+            widget._errorHandling(err_name_exceeds_max);
+            return;
+        }
 
         // setting up the reader
         var reader = new FileReader();
