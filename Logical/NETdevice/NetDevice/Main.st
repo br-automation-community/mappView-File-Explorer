@@ -3,7 +3,8 @@ END_PROGRAM
 
 PROGRAM _CYCLIC
 	// Trigger ping request
-	PingTimer.IN := TRUE;
+	IF NOT NET.PAR.ignore_ping THEN
+		PingTimer.IN := TRUE;
 	PingTimer.PT := PING_TIMEOUT;
 	PingTimer();
 	// Try to ping network share if not connected
@@ -29,6 +30,7 @@ PROGRAM _CYCLIC
 		END_IF
 	ELSIF(PingTimer.Q) THEN
 		PingTimer(IN := FALSE);
+	END_IF
 	END_IF
 
 	CASE state_machine OF
@@ -84,17 +86,17 @@ PROGRAM _CYCLIC
 				brsstrcat(ADR(device_param), ADR(NET.PAR.server_protocol));  																												
 				brsstrcat(ADR(device_param), ADR(' '));  		
 			END_IF
-			IF(brsstrcmp(ADR(NET.PAR.server_port), ADR('')) <> 0) THEN
+			IF(brsstrcmp(ADR(NET.PAR.server_protocol), ADR('tftp')) = 0 AND brsstrcmp(ADR(NET.PAR.server_port), ADR('')) <> 0) THEN
 				brsstrcat(ADR(device_param), ADR('/PORT='));  		
 				brsstrcat(ADR(device_param), ADR(NET.PAR.server_port));  																												
 				brsstrcat(ADR(device_param), ADR(' '));  		
 			END_IF
-			IF(brsstrcmp(ADR(NET.PAR.server_domain), ADR('')) <> 0) THEN
+			IF(brsstrcmp(ADR(NET.PAR.server_protocol), ADR('cifs')) = 0 AND brsstrcmp(ADR(NET.PAR.server_domain), ADR('')) <> 0) THEN
 				brsstrcat(ADR(device_param), ADR('/DOMAIN='));  		
 				brsstrcat(ADR(device_param), ADR(NET.PAR.server_domain));  																												
 				brsstrcat(ADR(device_param), ADR(' '));  		
 			END_IF
-			IF(brsstrcmp(ADR(NET.PAR.server_share), ADR('')) <> 0) THEN
+			IF(brsstrcmp(ADR(NET.PAR.server_protocol), ADR('cifs')) = 0 AND brsstrcmp(ADR(NET.PAR.server_share), ADR('')) <> 0) THEN
 				brsstrcat(ADR(device_param), ADR('/SHARE='));  		
 				brsstrcat(ADR(device_param), ADR(NET.PAR.server_share));  																												
 				brsstrcat(ADR(device_param), ADR(' '));  		
