@@ -345,6 +345,24 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#04092026" class="md-nav__link">
+    <span class="md-ellipsis">
+      04.09.2026
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27042026" class="md-nav__link">
+    <span class="md-ellipsis">
+      27.04.2026
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#07012026" class="md-nav__link">
     <span class="md-ellipsis">
       07.01.2026
@@ -565,6 +583,7 @@
 <p>The sample consists of three tasks and a mappView sample page. The task FileExplorer handles the files and folder operations as well as the navigation. The two additional helper tasks USBdevice and NETdevice allow the connection of USB sticks and network devices. The USBdevice tasks auto detects and mounts connected USB sticks. The sample page shows all available functions and can be used as a starting point. The following functions are currently supported.</p>
 <ul>
 <li>Copy one or all files or folders</li>
+<li>Duplicate a file in the current directory</li>
 <li>Delete one or all files or folders</li>
 <li>Create a new folder</li>
 <li>Rename file or folder</li>
@@ -608,6 +627,11 @@
    <td></td>
    <td>copyall</td>
    <td colspan="3">Copy all files and folders. The command will overwrite all existing files on the target.</td>
+  </tr>
+   <tr>
+   <td></td>
+   <td>duplicate</td>
+   <td colspan="3">Duplicate the selected file in the current directory. A numbered suffix is appended to the new file name.</td>
   </tr>
    <tr>
    <td></td>
@@ -828,11 +852,12 @@ mappFileExplorer-&gt;ExplorerVariables.var</p>
 <h2 id="configuration-at-runtime">Configuration at runtime</h2>
 <p><img alt="" src="images/screenshot_cfg.png" /></p>
 <p>The following settings can be changed during runtime for USB and network connection. For details about the network settings see the Automation Help (6bc04f87-a564-42fe-be38-060045eb83d6).</p>
+<p>The network configuration additionally provides protocol specific parameters (for example the TFTP port or the CIFS domain and share), an <em>Ignore ping</em> option that disables the ping watchdog and the automatic disconnect, and a connection indicator that shows whether the network share is currently linked.</p>
 <h2 id="limitations">Limitations</h2>
 <ul>
 <li>The sample is not multi client capable.</li>
-<li>The network needs up to two minutes to time out if the share is not available. This time must also be considered when the server address is corrected. Even in this case it can take a few minutes to connect to the correct server.</li>
-<li>Device memory information does not work on network devices.</li>
+<li>The network needs up to two minutes to time out if the share is not available. This time must also be considered when the server address is corrected. Even in this case it can take a few minutes to connect to the correct server. Enable <em>Ignore ping</em> to suppress this watchdog and keep the connection open.</li>
+<li>Device memory information does not work on network devices and is skipped completely for FTP connections.</li>
 <li>USB, network connection and some other features do not work when the target is in simulation mode.</li>
 <li>Memory information at the moment only shows total memory correct below 4GB.
 <br/><br/><br/></li>
@@ -912,6 +937,21 @@ mappFileExplorer-&gt;ExplorerVariables.var</p>
 </tbody>
 </table>
 <h2 id="revision-history">Revision History</h2>
+<h4 id="04092026">04.09.2026</h4>
+<ul>
+<li>Updated project to Automation Studio 6.7 and Automation Runtime 6.7.8 with current mapp libraries and configuration</li>
+<li>Fixed FTP root file operations by using relative paths without a leading slash</li>
+<li>Skip device memory information for FTP network devices</li>
+<li>Fixed the mappView root file URL separator after relative path generation</li>
+<li>Added protocol-specific network device parameters and an option to ignore ping failures</li>
+<li>Removed the SYSTEM entry from the predefined device list</li>
+<li>Added a network connection indicator to the configuration flyout</li>
+</ul>
+<h4 id="27042026">27.04.2026</h4>
+<ul>
+<li>Added new command duplicate</li>
+<li>Check file name length during command rename and upload</li>
+</ul>
 <h4 id="07012026">07.01.2026</h4>
 <ul>
 <li>Better error message when upload file size exceeds maximum</li>
