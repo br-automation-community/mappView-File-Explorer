@@ -16,8 +16,8 @@
     <Object Type="Package">mappView</Object>
     <Object Type="Package">mappCockpit</Object>
   </Objects>
-  <Configuration ModuleId="X20CP3585">
-    <AutomationRuntime Version="J4.93" />
+  <Configuration ModuleId="X20CP3687X">
+    <AutomationRuntime Version="U4.93" />
     <Build GccVersion="4.1.2" />
     <DefaultTargetMemory Tasks="UserROM" />
     <Safety SafetyRelease="0.0" />

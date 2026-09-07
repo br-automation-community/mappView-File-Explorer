@@ -283,5 +283,9 @@
 			<Source xsi:type="opcUa" refId="::AsGlobalPV:NET.PAR.ignore_ping" attribute="value" />
 			<Target xsi:type="brease" contentRefId="contentExplorer" widgetRefId="chkUSBenable1" attribute="value" />
 		</Binding>
+		<Binding mode="twoWay">
+			<Source xsi:type="opcUa" refId="::AsGlobalPV:NET.PAR.is_linked" attribute="value" />
+			<Target xsi:type="brease" contentRefId="contentExplorer" widgetRefId="btnNETconnected1" attribute="value" />
+		</Binding>
 	</Bindings>
 </BindingsSet>
