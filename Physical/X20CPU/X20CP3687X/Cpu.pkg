@@ -16,10 +16,11 @@
     <Object Type="Package">mappCockpit</Object>
   </Objects>
   <Configuration ModuleId="X20CP3687X">
-    <AutomationRuntime Version="6.4.2" />
+    <AutomationRuntime Version="6.7.8" />
     <Build GccVersion="11.3.0" />
     <DefaultTargetMemory Tasks="UserROM" />
     <Safety SafetyRelease="0.0" />
     <Transfer WaitForReconnectAfterReboot="True" />
+    <OnlineConfiguration Name="X20CP3687X_1" DeviceType="TCPIP" DeviceParameters="/IF=tcpip" ConnectionParameters="/COMT=5000 /AM=* /SDT=20 /IP=192.168.30.181 /PT=11169" Description="" />
   </Configuration>
 </Cpu>
