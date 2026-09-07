@@ -3,6 +3,7 @@
 - Skip device memory information for FTP network devices
 - Fixed the mappView root file URL separator after relative path generation
 - Added protocol-specific network device parameters and an option to ignore ping failures
+- Removed the SYSTEM entry from the predefined device list
 
 Version 1.9
 - Update to Automation Studio AS 4.12 and mapp 5.24
