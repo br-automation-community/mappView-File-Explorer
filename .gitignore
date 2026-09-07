@@ -13,6 +13,8 @@
 # The leading / assumes this file is next to the .apj file.
 # -----------------------------------------------------------------------------
 
+/mkdocs/
+
 # AR versions are regenerated for the installed Automation Runtime
 /AS/System/
 
@@ -137,3 +139,5 @@ coverage/
 
 .DS_Store
 Thumbs.db
+AGENTS.md
+.vscode/
