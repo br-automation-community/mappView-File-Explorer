@@ -4,6 +4,7 @@
 - Fixed the mappView root file URL separator after relative path generation
 - Added protocol-specific network device parameters and an option to ignore ping failures
 - Removed the SYSTEM entry from the predefined device list
+- Added a network connection indicator to the configuration flyout
 
 27.04.2026
 - Added new command duplicate
