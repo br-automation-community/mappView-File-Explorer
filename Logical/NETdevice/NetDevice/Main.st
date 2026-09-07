@@ -3,32 +3,34 @@ END_PROGRAM
 
 PROGRAM _CYCLIC
 	// Trigger ping request
-	PingTimer.IN := TRUE;
-	PingTimer.PT := PING_TIMEOUT;
-	PingTimer();
-	// Try to ping network share if not connected
-	IF((NET.PAR.server_ip <> '' OR NET.PAR.server_name <> '') AND PingTimer.Q) THEN
-		// Use IPÜ address
-		IF(NET.PAR.server_ip <> '') THEN
-			IcmpPing_0(enable := TRUE, pHost := ADR(NET.PAR.server_ip), timeout := PING_TIMEOUT);
-		// Use host name		
-		ELSE
-			IcmpPing_0(enable := TRUE, pHost := ADR(NET.PAR.server_name), timeout := PING_TIMEOUT);
-		END_IF
-		// Ping was OK
-		IF(IcmpPing_0.status = ERR_OK) THEN
-			PingTimer(IN := FALSE);
-			NET.PAR.can_ping := TRUE;
-		// Disconnect from share when ping failed
-		ELSIF(IcmpPing_0.status <> ERR_FUB_BUSY) THEN
-			PingTimer(IN := FALSE);
-			NET.PAR.can_ping := FALSE;
-			IF(NET.PAR.is_linked) THEN
-				NET.CMD.disconnect := TRUE;
+	IF NOT NET.PAR.ignore_ping THEN
+		PingTimer.IN := TRUE;
+		PingTimer.PT := PING_TIMEOUT;
+		PingTimer();
+		// Try to ping network share if not connected
+		IF((NET.PAR.server_ip <> '' OR NET.PAR.server_name <> '') AND PingTimer.Q) THEN
+			// Use IPÜ address
+			IF(NET.PAR.server_ip <> '') THEN
+				IcmpPing_0(enable := TRUE, pHost := ADR(NET.PAR.server_ip), timeout := PING_TIMEOUT);
+			// Use host name		
+			ELSE
+				IcmpPing_0(enable := TRUE, pHost := ADR(NET.PAR.server_name), timeout := PING_TIMEOUT);
 			END_IF
+			// Ping was OK
+			IF(IcmpPing_0.status = ERR_OK) THEN
+				PingTimer(IN := FALSE);
+				NET.PAR.can_ping := TRUE;
+			// Disconnect from share when ping failed
+			ELSIF(IcmpPing_0.status <> ERR_FUB_BUSY) THEN
+				PingTimer(IN := FALSE);
+				NET.PAR.can_ping := FALSE;
+				IF(NET.PAR.is_linked) THEN
+					NET.CMD.disconnect := TRUE;
+				END_IF
+			END_IF
+		ELSIF(PingTimer.Q) THEN
+			PingTimer(IN := FALSE);
 		END_IF
-	ELSIF(PingTimer.Q) THEN
-		PingTimer(IN := FALSE);
 	END_IF
 
 	CASE state_machine OF
@@ -84,20 +86,24 @@ PROGRAM _CYCLIC
 				brsstrcat(ADR(device_param), ADR(NET.PAR.server_protocol));  																												
 				brsstrcat(ADR(device_param), ADR(' '));  		
 			END_IF
-			IF(brsstrcmp(ADR(NET.PAR.server_port), ADR('')) <> 0) THEN
-				brsstrcat(ADR(device_param), ADR('/PORT='));  		
-				brsstrcat(ADR(device_param), ADR(NET.PAR.server_port));  																												
-				brsstrcat(ADR(device_param), ADR(' '));  		
+			IF(brsstrcmp(ADR(NET.PAR.server_protocol), ADR('tftp')) = 0) THEN
+				IF(brsstrcmp(ADR(NET.PAR.server_port), ADR('')) <> 0) THEN
+					brsstrcat(ADR(device_param), ADR('/PORT='));  		
+					brsstrcat(ADR(device_param), ADR(NET.PAR.server_port));  																																				
+					brsstrcat(ADR(device_param), ADR(' '));  		
+				END_IF
 			END_IF
-			IF(brsstrcmp(ADR(NET.PAR.server_domain), ADR('')) <> 0) THEN
-				brsstrcat(ADR(device_param), ADR('/DOMAIN='));  		
-				brsstrcat(ADR(device_param), ADR(NET.PAR.server_domain));  																												
-				brsstrcat(ADR(device_param), ADR(' '));  		
-			END_IF
-			IF(brsstrcmp(ADR(NET.PAR.server_share), ADR('')) <> 0) THEN
-				brsstrcat(ADR(device_param), ADR('/SHARE='));  		
-				brsstrcat(ADR(device_param), ADR(NET.PAR.server_share));  																												
-				brsstrcat(ADR(device_param), ADR(' '));  		
+			IF(brsstrcmp(ADR(NET.PAR.server_protocol), ADR('cifs')) = 0) THEN
+				IF(brsstrcmp(ADR(NET.PAR.server_domain), ADR('')) <> 0) THEN
+					brsstrcat(ADR(device_param), ADR('/DOMAIN='));  		
+					brsstrcat(ADR(device_param), ADR(NET.PAR.server_domain));  																																				
+					brsstrcat(ADR(device_param), ADR(' '));  		
+				END_IF
+				IF(brsstrcmp(ADR(NET.PAR.server_share), ADR('')) <> 0) THEN
+					brsstrcat(ADR(device_param), ADR('/SHARE='));  		
+					brsstrcat(ADR(device_param), ADR(NET.PAR.server_share));  																																				
+					brsstrcat(ADR(device_param), ADR(' '));  		
+				END_IF
 			END_IF
 			IF(brsstrcmp(ADR(NET.PAR.user_name), ADR('')) <> 0) THEN
 				brsstrcat(ADR(device_param), ADR('/USER='));  		

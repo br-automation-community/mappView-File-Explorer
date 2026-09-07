@@ -69,10 +69,12 @@ FUNCTION CreateCompletePath
 		
 	// ------------------------------------------------------------------------------------------------ 		
 	// Create directory path
-	IF(path <> '/') THEN
-		brsstrcat(return_path, ADR('/')); 
+	IF(path = '/') THEN
+		brsstrcpy(return_path, ADR(tmp));
+	ELSE
+		brsstrcat(return_path, ADR('/'));
+		brsstrcat(return_path, ADR(tmp));
 	END_IF
-	brsstrcat(return_path, ADR(tmp));
 	//	brsstrcat(return_path, ADR('/')); 
 	
 	CreateCompletePath := FALSE;

@@ -21,6 +21,7 @@ TYPE
 		server_share : STRING[80] := 'share'; (*Name of the shared folder*)
 		user_name : STRING[80] := 'user'; (*User name*)
 		user_password : STRING[80] := 'password'; (*User password*)
+		ignore_ping : BOOL := FALSE; (*Ignore ping and do not auto disconnect*)
 		enable_connect : BOOL; (*Enable button connect*)
 		can_ping : BOOL; (*Indicates that the network share can be pinged*)
 		is_linked : BOOL; (*Network share is connected*)

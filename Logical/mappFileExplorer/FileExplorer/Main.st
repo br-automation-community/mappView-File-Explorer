@@ -442,16 +442,24 @@ PROGRAM _CYCLIC
 			// Get device memory information
 			//**********************************************************************************************
 		EXP_READ_DIR_4:
-			DMemInfo.enable 	:= TRUE;
-			DMemInfo.pDevice	:= ADR(EXPL.PAR[side].device_active);
-			DMemInfo();
+				IF (NET.PAR.server_protocol = 'ftp' AND EXPL.PAR[side].device_active = 'NET_DEVICE') THEN
+					DMemInfo(enable := FALSE);
+					EXPL.DAT[side].device_free := 0;
+					EXPL.DAT[side].device_size := 0;
+				ELSE
+					DMemInfo.enable 	:= TRUE;
+					DMemInfo.pDevice	:= ADR(EXPL.PAR[side].device_active);
+					DMemInfo();
+					IF (DMemInfo.status = OK) THEN
+						// Transfer device memory information
+						EXPL.DAT[side].device_free := UDINT_TO_INT(DMemInfo.freemem/1048576);
+						EXPL.DAT[side].device_size := UDINT_TO_INT(DMemInfo.memsize/1048576);
+					END_IF
+				END_IF
 
 			// ----------------------------------------------------------------------------------------
 			// OK
-			IF (DMemInfo.status = OK) THEN
-				// Transfer device memory information
-				EXPL.DAT[side].device_free := UDINT_TO_INT(DMemInfo.freemem/1048576);
-				EXPL.DAT[side].device_size := UDINT_TO_INT(DMemInfo.memsize/1048576);
+				IF ((NET.PAR.server_protocol = 'ftp' AND EXPL.PAR[side].device_active = 'NET_DEVICE') OR (DMemInfo.status = OK)) THEN
 				// Select item after copy->refresh
 				IF(do_select <> 0) THEN
 					FOR ly:=0 TO EXPL.DAT[NOT USINT_TO_BOOL(do_select-1)].item_num DO
@@ -818,6 +826,9 @@ PROGRAM _CYCLIC
 					IF(brsmemcmp(ADR(tmp_str1) + brsstrlen(ADR(tmp_str1)) - brsstrlen(ADR(EXPL_VIEW_FILTER[lx])) , ADR(EXPL_VIEW_FILTER[lx]), brsstrlen(ADR(EXPL_VIEW_FILTER[lx]))) = 0) THEN
 						EXPL.VIS[side].view_file_path := '/FileDevice:';
 						brsstrcat(ADR(EXPL.VIS[side].view_file_path), ADR(EXPL.PAR[side].device_active));
+						IF(brsmemcmp(ADR(tmp_str1), ADR('/'), 1) <> 0) THEN
+							brsstrcat(ADR(EXPL.VIS[side].view_file_path), ADR('/'));
+						END_IF
 						brsstrcat(ADR(EXPL.VIS[side].view_file_path), ADR(tmp_str1));
 						EXPL.CMD[side].view_file := FALSE;
 						EXPL.VIS[side].view_file := TRUE;
