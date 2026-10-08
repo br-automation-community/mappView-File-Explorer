@@ -14,6 +14,7 @@
     <Parameter ID="UserPartitionSize" Value="200" />
     <Parameter ID="VolatileGlobalPvSize" Value="200000" />
     <Parameter ID="EnableDebugger" Value="1" />
+    <Parameter ID="ActivateEncryption" Value="0" />
     <Group ID="FileDevice1" />
     <Parameter ID="FileDeviceName1" Value="USER" />
     <Parameter ID="FileDevicePath1" Value="USER_PATH" />
