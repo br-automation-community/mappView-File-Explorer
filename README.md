@@ -1,7 +1,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Made For B&R](https://github.com/hilch/BandR-badges/blob/main/Made-For-BrAutomation.svg)](https://www.br-automation.com)
-
-> **Hinweis / Notice:** Please read the [Disclaimer](#disclaimer) / [Haftungsausschluss](#haftungsausschluss) at the end of this README before using this software.
+[![Disclaimer](https://img.shields.io/badge/Disclaimer-please%20read-orange.svg)](#disclaimer)
 
 ## Introduction
 This is a sample project for a file Explorer with mappView. It allows you to delete and copy files or directories between two locations. Navigate through the folder structure by double tapping on a folder name. Access USB sticks and network shares and use them like local folders.
